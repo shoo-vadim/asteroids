@@ -8,18 +8,21 @@ namespace App.Code.View
     public class Circle : MonoBehaviour
     {
         [SerializeField] private float _radius;
+        [SerializeField] private int _segments;
 
         private readonly float _width = 0.1f;
-        private readonly int _segments = 10;
 
         private LineRenderer _line;
         
         private void CreatePoints()
         {
+            // Should be 1 segment more to fix loop gap
+            var points = _line.positionCount = _segments + 1 + 1;
+
             var angle = 0f;
             var step = 360f / _segments;
 
-            for (var i = 0; i < _segments + 1; i++)
+            for (var i = 0; i < points; i++)
             {
                 var x = Mathf.Sin (Mathf.Deg2Rad * angle) * _radius;
                 var y = Mathf.Cos (Mathf.Deg2Rad * angle) * _radius;
@@ -32,8 +35,12 @@ namespace App.Code.View
 
         private void OnValidate()
         {
+            if (_segments < 3)
+            {
+                throw new ArgumentException("Segments count couldn't be less then 3");
+            }
+            
             _line = GetComponent<LineRenderer>();
-            _line.positionCount = _segments + 1;
             _line.useWorldSpace = false;
             _line.startWidth = _line.endWidth = _width;
             
