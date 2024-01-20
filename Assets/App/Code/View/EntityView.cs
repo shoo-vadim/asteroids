@@ -4,13 +4,12 @@ using UnityEngine;
 namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
-    [ExecuteInEditMode]
     public class EntityView : MonoBehaviour
     {
+        [Range(0.1f, 2f)]
         [SerializeField] private float _radius;
+        [Range(3f, 42f)]
         [SerializeField] private int _segments;
-
-        private readonly float _width = 0.1f;
 
         private LineRenderer _line;
         
@@ -24,10 +23,10 @@ namespace App.Code.View
 
             for (var i = 0; i < points; i++)
             {
-                var x = Mathf.Sin (Mathf.Deg2Rad * angle) * _radius;
-                var y = Mathf.Cos (Mathf.Deg2Rad * angle) * _radius;
+                var x = Mathf.Sin(Mathf.Deg2Rad * angle) * _radius;
+                var y = Mathf.Cos(Mathf.Deg2Rad * angle) * _radius;
 
-                _line.SetPosition (i, new Vector3(x, y, 0));
+                _line.SetPosition(i, new Vector3(x, y, 0));
 
                 angle += step;
             }
@@ -42,8 +41,7 @@ namespace App.Code.View
             
             _line = GetComponent<LineRenderer>();
             _line.useWorldSpace = false;
-            _line.startWidth = _line.endWidth = _width;
-            
+
             CreatePoints();
         }
     }
