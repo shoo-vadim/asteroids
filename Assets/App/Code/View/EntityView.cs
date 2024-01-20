@@ -5,7 +5,7 @@ namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
     [ExecuteInEditMode]
-    public class Circle : MonoBehaviour
+    public class EntityView : MonoBehaviour
     {
         [SerializeField] private float _radius;
         [SerializeField] private int _segments;
