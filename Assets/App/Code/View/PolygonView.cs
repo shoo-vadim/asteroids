@@ -1,10 +1,10 @@
-using System;
 using UnityEngine;
 
 namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
-    public class EntityView : MonoBehaviour
+    [RequireComponent(typeof(LineView))]
+    public class PolygonView : MonoBehaviour
     {
         [Range(0.1f, 2f)]
         [SerializeField] private float _radius;
@@ -34,11 +34,6 @@ namespace App.Code.View
 
         private void OnValidate()
         {
-            if (_segments < 3)
-            {
-                throw new ArgumentException("Segments count couldn't be less then 3");
-            }
-            
             _line = GetComponent<LineRenderer>();
             _line.useWorldSpace = false;
 

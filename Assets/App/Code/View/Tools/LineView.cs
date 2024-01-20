@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace App.Code.View.Tools
+namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
     public class LineView : MonoBehaviour

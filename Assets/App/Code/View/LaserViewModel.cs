@@ -1,55 +1,16 @@
 ﻿using System;
+using App.Code.Model;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace App.Code
+namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
     public class LaserViewModel : MonoBehaviour
     {
-        // function getIntersectionPoint(ray, circle) {
-        //     const [A, B] = ray;
-        //     const C = { x: circle.x, y: circle.y };
-        //     const r = circle.radius;
-        //
-        //     const a = (B.x - A.x) ** 2 + (B.y - A.y) ** 2;
-        //     const b = 2 * ((B.x - A.x) * (A.x - C.x) + (B.y - A.y) * (A.y - C.y));
-        //     const c = (A.x - C.x) ** 2 + (A.y - C.y) ** 2 - r ** 2;
-        //     const discriminant = b ** 2 - 4 * a * c;
-        //
-        //     const result = [];
-        //
-        //     if(discriminant === 0) {
-        //         const t = -b / (2 * a);
-        //
-        //         if(t >= 0) {
-        //             const x = t * (B.x - A.x) + A.x;
-        //             const y = t * (B.y - A.y) + A.y;
-        //
-        //             result.push({ x, y });
-        //         }
-        //     } else if(discriminant > 0) {
-        //         const discriminantSqrt = Math.sqrt(discriminant);
-        //         const t1 = (-b + discriminantSqrt) / (2 * a);
-        //         const t2 = (-b - discriminantSqrt) / (2 * a);
-        //
-        //         if(t1 >= 0) {
-        //             const x = t1 * (B.x - A.x) + A.x;
-        //             const y = t1 * (B.y - A.y) + A.y;
-        //
-        //             result.push({ x, y })
-        //         }
-        //
-        //         if(t2 >= 0) {
-        //             const x = t2 * (B.x - A.x) + A.x;
-        //             const y = t2 * (B.y - A.y) + A.y;
-        //
-        //             result.push({ x, y });
-        //         }
-        //     }
-        //
-        //     return result;
-        // }
+        [SerializeField] private Transform _intersection;
+        [SerializeField] private Transform _target;
+        
         private LineRenderer _line;
         private Camera _camera;
 
@@ -65,7 +26,7 @@ namespace App.Code
                 DrawLineRenderer(Mouse.current.position.ReadValue());
             }
         }
-        
+
         private void OnValidate()
         {
             SetupLine();
@@ -73,8 +34,19 @@ namespace App.Code
 
         private void DrawLineRenderer(Vector2 point)
         {
+            var p = transform.position;
             var m = _camera.ScreenToWorldPoint(point);
-            _line.SetPosition(1, new Vector3(m.x, m.y));
+            var destination = new Vector3(m.x, m.y);
+            _line.SetPosition(0, p);
+            _line.SetPosition(1, destination);
+            var has = HasIntersection(
+                new Laser(p, destination), 
+                new Circle(_target.position, 1f));
+
+            if (has)
+            {
+                Debug.Log("INTERSECTED!");
+            }
         }
 
         private void SetupCamera()
@@ -92,6 +64,21 @@ namespace App.Code
             _line = GetComponent<LineRenderer>();
             _line.useWorldSpace = true;
             _line.positionCount = 2;
+        }
+
+        // https://github.com/sszczep/ray-casting-in-2d-game-engines
+        private static bool HasIntersection(Laser laser, Circle circle)
+        {
+            var (a, b) = (laser.Source, laser.Destination);
+            var c = circle.Position;
+            var r = circle.Radius;
+
+            var v1 = Mathf.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2);
+            var v2 = 2 * ((b.x - a.x) * (a.x - c.x) + (b.y - a.y) * (a.y - c.y));
+            var v3 = Mathf.Pow(a.x - c.x, 2) + Mathf.Pow(a.y - c.y, 2) - Mathf.Pow(r, 2);
+            var discriminant = Mathf.Pow(v2, 2) - 4 * v1 * v3;
+
+            return discriminant >= 0;
         }
     }
 }
