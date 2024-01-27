@@ -1,19 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace App.Code.Model.Proto
 {
     public class OpenSpace
     {
         private readonly Field _field;
-        
         private readonly Entity[] _entities;
 
-        public OpenSpace(Field field, int count)
+        public OpenSpace(Field field, Entity[] entities)
         {
             _field = field;
-            _entities = CreateEntities(count).ToArray();
+            _entities = entities;
         }
 
         public void Update(float delta)
@@ -28,19 +25,6 @@ namespace App.Code.Model.Proto
                 }
                 
                 Debug.DrawRay(entity.Position, entity.Direction);
-            }
-        }
-
-        private IEnumerable<Entity> CreateEntities(int count)
-        {
-            for (var i = 0; i < count; i++)
-            {
-                yield return new Entity
-                {
-                    Position = _field.GetRandomPosition(),
-                    Direction = Tools.GetRandomDirection(),
-                    Speed = Random.Range(3, 5)
-                };
             }
         }
     }
