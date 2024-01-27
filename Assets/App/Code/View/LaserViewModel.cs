@@ -23,7 +23,9 @@ namespace App.Code.View
         {
             if (Mouse.current.leftButton.isPressed)
             {
-                DrawLineRenderer(Mouse.current.position.ReadValue());
+                DrawLineRenderer(transform.position, 
+                    _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()),
+                    _target.position);
             }
         }
 
@@ -32,20 +34,20 @@ namespace App.Code.View
             SetupLine();
         }
 
-        private void DrawLineRenderer(Vector2 point)
+        private void DrawLineRenderer(Vector2 origin, Vector2 destination, Vector2 point)
         {
-            var p = transform.position;
-            var m = _camera.ScreenToWorldPoint(point);
-            var destination = new Vector3(m.x, m.y);
-            _line.SetPosition(0, p);
-            _line.SetPosition(1, destination);
-            var has = HasIntersection(
-                new Laser(p, destination), 
-                new Circle(_target.position, 1f));
+            var r = 1.0f;
+            // _line.SetPosition(0, origin);
+            // _line.SetPosition(1, destination);
 
-            if (has)
+            var direction = (destination - origin).normalized;
+            var dot = Vector2.Dot(point - origin, direction);
+
+            // _intersection.position = closest;
+            
+            if ((origin + direction * dot - point).sqrMagnitude < r * r && dot > 0)
             {
-                Debug.Log("INTERSECTED!");
+                Debug.Log("Intersected!");
             }
         }
 
@@ -64,21 +66,6 @@ namespace App.Code.View
             _line = GetComponent<LineRenderer>();
             _line.useWorldSpace = true;
             _line.positionCount = 2;
-        }
-
-        // https://github.com/sszczep/ray-casting-in-2d-game-engines
-        private static bool HasIntersection(Laser laser, Circle circle)
-        {
-            var (a, b) = (laser.Source, laser.Destination);
-            var c = circle.Position;
-            var r = circle.Radius;
-
-            var v1 = Mathf.Pow(b.x - a.x, 2) + Mathf.Pow(b.y - a.y, 2);
-            var v2 = 2 * ((b.x - a.x) * (a.x - c.x) + (b.y - a.y) * (a.y - c.y));
-            var v3 = Mathf.Pow(a.x - c.x, 2) + Mathf.Pow(a.y - c.y, 2) - Mathf.Pow(r, 2);
-            var discriminant = Mathf.Pow(v2, 2) - 4 * v1 * v3;
-
-            return discriminant >= 0;
         }
     }
 }
