@@ -1,5 +1,5 @@
 ﻿using System;
-using App.Code.Model;
+using App.Code.Model.Proto;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,16 +17,22 @@ namespace App.Code.View
         private void Awake()
         {
             SetupCamera();
+
+            var field = new Field(2, 4);
+            Debug.Log(field.GetMirroredPosition(Vector2.right * 10));
+            Debug.Log(field.GetMirroredPosition(Vector2.left * 10));
+            Debug.Log(field.GetMirroredPosition(Vector2.up * 10));
+            Debug.Log(field.GetMirroredPosition(Vector2.down * 10));
         }
 
         private void Update()
         {
             if (Mouse.current.leftButton.isPressed)
             {
-                DrawLineRenderer(
-                    transform.position, 
-                    _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()),
-                    _target.position);
+                // DrawLineRenderer(
+                //     transform.position, 
+                //     _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()),
+                //     _target.position);
             }
         }
 
