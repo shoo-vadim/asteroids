@@ -17,7 +17,7 @@ namespace App.Code.Model.Proto
         {
             foreach (var entity in _entities)
             {
-                entity.Position += entity.Direction * entity.Speed * delta;
+                entity.Position += entity.Direction * (entity.Speed * delta);
                 
                 if (_field.GetMirroredPosition(entity.Position) is (true, var position))
                 {
