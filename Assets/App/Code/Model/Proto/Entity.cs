@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-namespace App.Code.Model
+namespace App.Code.Model.Proto
 {
     public class Entity
     {
         public Vector2 Position;
-        public Quaternion Direction;
+        public Vector2 Direction;
         public float Speed;
     }
 }
