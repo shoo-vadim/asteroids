@@ -12,7 +12,7 @@ namespace App.Code
         private void Awake()
         {
             var field = new Field(10, 5);
-            _space = new OpenSpace(field, CreateEntities(field, 10).ToArray());
+            _space = new OpenSpace(field, CreateRandomEntities(field, 10).ToArray());
         }
 
         private void Update()
@@ -20,14 +20,14 @@ namespace App.Code
             _space.Update(Time.deltaTime);
         }
         
-        private IEnumerable<Entity> CreateEntities(Field field, int count)
+        private static IEnumerable<Entity> CreateRandomEntities(Field field, int count)
         {
             for (var i = 0; i < count; i++)
             {
                 yield return new Entity
                 {
                     Position = field.GetRandomPosition(),
-                    Direction = Tools.GetRandomDirection(),
+                    Direction = Vector2.up.GetRotated(Random.Range(0, 360)),
                     Speed = Random.Range(3, 5)
                 };
             }
