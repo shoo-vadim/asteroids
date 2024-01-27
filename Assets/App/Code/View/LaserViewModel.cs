@@ -23,7 +23,8 @@ namespace App.Code.View
         {
             if (Mouse.current.leftButton.isPressed)
             {
-                DrawLineRenderer(transform.position, 
+                DrawLineRenderer(
+                    transform.position, 
                     _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()),
                     _target.position);
             }
@@ -34,22 +35,22 @@ namespace App.Code.View
             SetupLine();
         }
 
-        private void DrawLineRenderer(Vector2 origin, Vector2 destination, Vector2 point)
-        {
-            var r = 1.0f;
-            // _line.SetPosition(0, origin);
-            // _line.SetPosition(1, destination);
-
-            var direction = (destination - origin).normalized;
-            var dot = Vector2.Dot(point - origin, direction);
-
-            // _intersection.position = closest;
-            
-            if ((origin + direction * dot - point).sqrMagnitude < r * r && dot > 0)
-            {
-                Debug.Log("Intersected!");
-            }
-        }
+        // private void DrawLineRenderer(Vector2 origin, Vector2 destination, Vector2 point)
+        // {
+        //     var r = 1.0f;
+        //     // _line.SetPosition(0, origin);
+        //     // _line.SetPosition(1, destination);
+        //
+        //     var direction = (destination - origin).normalized;
+        //     var dot = Vector2.Dot(point - origin, direction);
+        //
+        //     // _intersection.position = closest;
+        //     
+        //     if ((origin + direction * dot - point).sqrMagnitude < r * r && dot > 0)
+        //     {
+        //         Debug.Log("Intersected!");
+        //     }
+        // }
 
         private void SetupCamera()
         {
