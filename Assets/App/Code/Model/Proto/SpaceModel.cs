@@ -2,20 +2,21 @@
 
 namespace App.Code.Model.Proto
 {
-    public class OpenSpace
+    public class SpaceModel
     {
-        private readonly Field _field;
-        private readonly Entity[] _entities;
+        public Entity[] Entities { get; }
 
-        public OpenSpace(Field field, Entity[] entities)
+        private readonly Field _field;
+
+        public SpaceModel(Field field, Entity[] entities)
         {
             _field = field;
-            _entities = entities;
+            Entities = entities;
         }
 
         public void Update(float delta)
         {
-            foreach (var entity in _entities)
+            foreach (var entity in Entities)
             {
                 entity.Position += entity.Direction * (entity.Speed * delta);
                 

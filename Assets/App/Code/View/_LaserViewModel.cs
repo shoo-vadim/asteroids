@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 namespace App.Code.View
 {
     [RequireComponent(typeof(LineRenderer))]
-    public class LaserViewModel : MonoBehaviour
+    public class _LaserViewModel : MonoBehaviour
     {
         [SerializeField] private Transform _intersection;
         [SerializeField] private Transform _target;

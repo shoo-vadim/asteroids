@@ -12,7 +12,7 @@ namespace App.Code.View
         [SerializeField] private int _segments;
 
         private LineRenderer _line;
-        
+
         private void CreatePoints()
         {
             // Should be 1 segment more to fix loop gap
