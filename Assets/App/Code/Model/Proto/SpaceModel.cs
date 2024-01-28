@@ -14,6 +14,16 @@ namespace App.Code.Model.Proto
             Entities = entities;
         }
 
+        public void CreateRandomEntity()
+        {
+            
+        }
+
+        public void RemoveRandomEntity()
+        {
+            
+        }
+
         public void Update(float delta)
         {
             foreach (var entity in Entities)
