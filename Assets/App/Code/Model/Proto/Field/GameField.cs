@@ -1,17 +1,17 @@
 ﻿using UnityEngine;
 
-namespace App.Code.Model.Proto
+namespace App.Code.Model.Proto.Field
 {
-    public class Field
+    public class GameField
     {
         private readonly Range<float> _x;
         private readonly Range<float> _y;
 
-        public Field(float x, float y) : this(new Range<float>(-x, +x), new Range<float>(-y, +y))
+        public GameField(float x, float y) : this(new Range<float>(-x, +x), new Range<float>(-y, +y))
         {
         }
 
-        private Field(Range<float> x, Range<float> y)
+        private GameField(Range<float> x, Range<float> y)
         {
             _x = x;
             _y = y;
