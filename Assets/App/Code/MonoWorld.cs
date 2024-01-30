@@ -3,6 +3,7 @@ using App.Code.Model.Proto;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
 using App.Code.View;
+using App.Code.View.Custom;
 using App.Code.View.Entities;
 using App.Code.View.Source;
 using UnityEngine;
@@ -53,30 +54,60 @@ namespace App.Code
         {
             for (var i = 0; i < _space.Entities.Length; i++)
             {
-                switch (CheckState(_views[i], _space.Entities[i]))
-                {
-                    case ViewState.Add:
-                        _views[i] = _source.Create<AsteroidView>(_space.Entities[i].Position);
-                        break;
-                    case ViewState.Remove:
-                        Destroy(_views[i].gameObject);
-                        break;
-                    case ViewState.Update:
-                        _views[i].Refresh(_space.Entities[i].Position);
-                        break;
-                }
+                RefreshByIndex(i);
             }
         }
 
-        private static ViewState CheckState(MonoView view, Entity entity)
+        private void DestroyView(ref MonoView view)
         {
-            return view 
-                ? entity == null 
-                    ? ViewState.Remove 
-                    : ViewState.Update
-                : entity == null 
-                    ? ViewState.Empty 
-                    : ViewState.Add;
+            Destroy(view.gameObject);
+            view = null;
+        }
+
+        private MonoView CreateViewFromEntity(Entity entity)
+        {
+            return entity.IsFragment
+                ? _source.Create<FragmentView>(entity.Position)
+                : _source.Create<AsteroidView>(entity.Position);
+        }
+
+        private bool IsAppropriateView(MonoView view, Entity entity)
+        {
+            return entity.IsFragment && view is FragmentView 
+                   || !entity.IsFragment && view is AsteroidView; 
+        }
+
+        private void RefreshByIndex(int i)
+        {
+            ref var view = ref _views[i];
+            ref var entity = ref _space.Entities[i];
+
+            if (!view)
+            {
+                if (entity != null)
+                {
+                    view = CreateViewFromEntity(entity);
+                }
+            }
+            else
+            {
+                if (entity != null)
+                {
+                    if (IsAppropriateView(view, entity))
+                    {
+                        view.Refresh(entity.Position);
+                    }
+                    else
+                    {
+                        DestroyView(ref view);
+                        view = CreateViewFromEntity(entity);
+                    }                    
+                }
+                else
+                {
+                    DestroyView(ref view);
+                }
+            }
         }
     }
 }

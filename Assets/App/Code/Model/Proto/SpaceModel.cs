@@ -2,6 +2,7 @@
 using System.Linq;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace App.Code.Model.Proto
@@ -32,10 +33,38 @@ namespace App.Code.Model.Proto
         public void DestroyRandomEntity()
         {
             var available = Entities.GetNotEmptyIndexes().ToArray();
+            if (available.Length <= 0)
+            {
+                Debug.Log("All entities already destroyed!");
+            }
+            
             var index = available[Random.Range(0, available.Length)];
-            Entities[index] = null;
+
+            if (Entities[index].IsFragment)
+            {
+                Entities[index] = null;
+            }
+            else
+            {
+                var (left, right) = CreateFragments(Entities[index]);
+                Entities[index] = left; 
+                AddEntity(right);
+            }
         }
 
+        private static (Entity left, Entity right) CreateFragments(Entity source)
+        {
+            Entity CreateRotated(int degrees) => new()
+            {
+                IsFragment = true,
+                Direction = source.Direction.GetRotated(degrees),
+                Position = source.Position,
+                Speed = source.Speed * 2
+            };
+            
+            return (CreateRotated(+20), CreateRotated(-20));
+        } 
+            
         public void Update(float delta)
         {
             foreach (var entity in Entities)
