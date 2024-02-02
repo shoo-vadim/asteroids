@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using App.Code.Model.Proto.Data;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
 using App.Code.View;
@@ -18,6 +19,23 @@ namespace App.Code.Model.Proto
         {
             _field = field;
             Entities = entities;
+        }
+
+        public void DestroyIntersected(Vector2 position)
+        {
+            for (var i = 0; i < Entities.Length; i++)
+            {
+                if (Entities[i] == null)
+                {
+                    continue;
+                }
+                
+                if ((Entities[i].Position - position).sqrMagnitude < 1)
+                {
+                    DestroyEntity(i);
+                    return;
+                }
+            }
         }
 
         public void AddEntity(Entity entity)
@@ -39,8 +57,11 @@ namespace App.Code.Model.Proto
                 Debug.Log("All entities already destroyed!");
             }
             
-            var index = available[Random.Range(0, available.Length)];
+            DestroyEntity(available[Random.Range(0, available.Length)]);
+        }
 
+        private void DestroyEntity(int index)
+        {
             switch (Entities[index].ElementType)
             {
                 case ElementType.Fragment:

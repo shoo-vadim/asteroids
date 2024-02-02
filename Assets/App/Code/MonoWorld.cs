@@ -13,15 +13,18 @@ namespace App.Code
     public class MonoWorld : MonoBehaviour
     {
         private SpaceModel _space;
-
+        
         private EntitiesGenerator _generator;
         private ViewPool _pool;
         private MonoView[] _views;
+        
+        private Camera _camera;
         
         private void Awake()
         {
             var max = byte.MaxValue;
             var field = new GameField(30, 15);
+            _camera = GetComponentInChildren<Camera>();
             _generator = new EntitiesGenerator(field, new Range<float>(3, 5));
             _space = new SpaceModel(field, _generator.CreateRandomEntities(10, max).ToArray());
             _views = new MonoView[max];
@@ -45,6 +48,12 @@ namespace App.Code
             if (Keyboard.current.numpadMinusKey.wasPressedThisFrame)
             {
                 _space.DestroyRandomEntity();
+            }
+
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                _space.DestroyIntersected(
+                    _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
             }
         }
 

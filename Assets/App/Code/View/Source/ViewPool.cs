@@ -35,7 +35,7 @@ namespace App.Code.View.Source
 
         public void Release(MonoView view)
         {
-            Destroy(view);
+            Destroy(view.gameObject);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using App.Code.View;
 using UnityEngine;
 
-namespace App.Code.Model.Proto
+namespace App.Code.Model.Proto.Data
 {
     public class Entity
     {

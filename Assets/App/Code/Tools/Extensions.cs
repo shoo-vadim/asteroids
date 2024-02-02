@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using App.Code.Model.Proto;
+using App.Code.Model.Proto.Data;
 
 namespace App.Code.Tools
 {
