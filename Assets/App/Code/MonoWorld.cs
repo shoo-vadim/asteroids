@@ -3,21 +3,19 @@ using App.Code.Model.Proto;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
 using App.Code.View;
-using App.Code.View.Custom;
-using App.Code.View.Entities;
 using App.Code.View.Source;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace App.Code
 {
-    [RequireComponent(typeof(ViewSource))]
+    [RequireComponent(typeof(ViewPool))]
     public class MonoWorld : MonoBehaviour
     {
         private SpaceModel _space;
 
         private EntitiesGenerator _generator;
-        private ViewSource _source;
+        private ViewPool _pool;
         private MonoView[] _views;
         
         private void Awake()
@@ -27,7 +25,7 @@ namespace App.Code
             _generator = new EntitiesGenerator(field, new Range<float>(3, 5));
             _space = new SpaceModel(field, _generator.CreateRandomEntities(10, max).ToArray());
             _views = new MonoView[max];
-            _source = GetComponent<ViewSource>();
+            _pool = GetComponent<ViewPool>();
         }
 
         private void Update()
@@ -58,25 +56,6 @@ namespace App.Code
             }
         }
 
-        private void DestroyView(ref MonoView view)
-        {
-            Destroy(view.gameObject);
-            view = null;
-        }
-
-        private MonoView CreateViewFromEntity(Entity entity)
-        {
-            return entity.IsFragment
-                ? _source.Create<FragmentView>(entity.Position)
-                : _source.Create<AsteroidView>(entity.Position);
-        }
-
-        private bool IsAppropriateView(MonoView view, Entity entity)
-        {
-            return entity.IsFragment && view is FragmentView 
-                   || !entity.IsFragment && view is AsteroidView; 
-        }
-
         private void RefreshByIndex(int i)
         {
             ref var view = ref _views[i];
@@ -86,26 +65,27 @@ namespace App.Code
             {
                 if (entity != null)
                 {
-                    view = CreateViewFromEntity(entity);
+                    view = _pool.Obtain(entity.ElementType, entity.Position);
                 }
             }
             else
             {
                 if (entity != null)
                 {
-                    if (IsAppropriateView(view, entity))
+                    if (view.ElementType == entity.ElementType)
                     {
                         view.Refresh(entity.Position);
                     }
                     else
                     {
-                        DestroyView(ref view);
-                        view = CreateViewFromEntity(entity);
+                        _pool.Release(view);
+                        view = _pool.Obtain(entity.ElementType, entity.Position);
                     }                    
                 }
                 else
                 {
-                    DestroyView(ref view);
+                    _pool.Release(view);
+                    view = null;
                 }
             }
         }

@@ -2,6 +2,7 @@
 using System.Linq;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
+using App.Code.View;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -40,15 +41,16 @@ namespace App.Code.Model.Proto
             
             var index = available[Random.Range(0, available.Length)];
 
-            if (Entities[index].IsFragment)
+            switch (Entities[index].ElementType)
             {
-                Entities[index] = null;
-            }
-            else
-            {
-                var (left, right) = CreateFragments(Entities[index]);
-                Entities[index] = left; 
-                AddEntity(right);
+                case ElementType.Fragment:
+                    Entities[index] = null;
+                    break;
+                case ElementType.Asteroid:
+                    var (left, right) = CreateFragments(Entities[index]);
+                    Entities[index] = left; 
+                    AddEntity(right);
+                    break;
             }
         }
 
@@ -56,7 +58,7 @@ namespace App.Code.Model.Proto
         {
             Entity CreateRotated(int degrees) => new()
             {
-                IsFragment = true,
+                ElementType = ElementType.Fragment,
                 Direction = source.Direction.GetRotated(degrees),
                 Position = source.Position,
                 Speed = source.Speed * 2

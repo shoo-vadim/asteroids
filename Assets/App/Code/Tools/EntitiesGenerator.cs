@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using App.Code.Model.Proto;
 using App.Code.Model.Proto.Field;
+using App.Code.View;
 
 
 namespace App.Code.Tools
@@ -21,6 +22,7 @@ namespace App.Code.Tools
         {
             return new Entity
             {
+                ElementType = ElementType.Asteroid,
                 Position = _field.GetRandomPosition(),
                 Direction = Vector2.up.GetRotated(Random.Range(0, 360)),
                 Speed = Random.Range(_speed.Min, _speed.Max)

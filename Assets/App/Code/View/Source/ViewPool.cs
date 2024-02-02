@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace App.Code.View.Source
 {
-    public class ViewSource : MonoBehaviour
+    public class ViewPool : MonoBehaviour
     {
         [SerializeField] private MonoView[] _views;
 
@@ -18,18 +18,24 @@ namespace App.Code.View.Source
             }
         }
 
-        public TView Create<TView>(Vector2 position) where TView : MonoView, new()
+        public MonoView Obtain(ElementType elementType, Vector2 position)
         {
-            var prefab = _views.Single(v => v.GetType() == typeof(TView));
+            var prefab = _views.Single(v => v.ElementType == elementType);
+
             if (!prefab)
             {
-                throw new ArgumentException($"Unable to find prefab of type {typeof(TView)}");
+                throw new ArgumentException($"Unable to find prefab for element {elementType}");
             }
             
             var view = Instantiate(prefab, _root.transform);
             view.Refresh(position);
             
-            return view as TView;
+            return view;
+        }
+
+        public void Release(MonoView view)
+        {
+            Destroy(view);
         }
     }
 }

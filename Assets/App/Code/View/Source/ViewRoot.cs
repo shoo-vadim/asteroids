@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace App.Code
+namespace App.Code.View.Source
 {
     public class ViewRoot : MonoBehaviour
     {
