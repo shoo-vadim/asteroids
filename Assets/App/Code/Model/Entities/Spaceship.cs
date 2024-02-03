@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace App.Code.Model.Entities
 {
-    public class Spaceship : Body, IDirectionable
+    public class Spaceship : Body, IElementDirectionable
     {
         public event Action<Vector2> UpdateDirection;
         

@@ -5,9 +5,9 @@ using UnityEngine;
 
 namespace App.Code.Model.Entities.Base
 {
-    public class Entity : IPositionable
+    public class Entity : IElement
     {
-        public event Action<Vector2> UpdatePosition;
+        public event Action Update;
         
         public Vector2 Position { get; private set; }
         
@@ -28,7 +28,7 @@ namespace App.Code.Model.Entities.Base
                 Position = position;
             }
             
-            UpdatePosition?.Invoke(Position);
+            Update?.Invoke();
         }
     }
 }

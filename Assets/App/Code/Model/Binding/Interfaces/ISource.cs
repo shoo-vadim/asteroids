@@ -4,7 +4,7 @@ namespace App.Code.Model.Binding.Interfaces
 {
     public interface ISource
     {
-        public event Action<IPositionable> ElementCreate;
-        public event Action<IPositionable> ElementRemove;
+        public event Action<ElementType, IElement> ElementCreate;
+        public event Action<IElement> ElementRemove;
     }
 }

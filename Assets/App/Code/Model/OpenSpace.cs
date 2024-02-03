@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using App.Code.Model.Binding;
 using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical;
@@ -11,8 +12,8 @@ namespace App.Code.Model
 {
     public class OpenSpace : ISource
     {
-        public event Action<IPositionable> ElementCreate;
-        public event Action<IPositionable> ElementRemove;
+        public event Action<ElementType, IElement> ElementCreate;
+        public event Action<IElement> ElementRemove;
 
         private readonly GameField _field;
         private readonly GameSettings _settings;
@@ -32,12 +33,12 @@ namespace App.Code.Model
         public void BuildWorld()
         {
             _spaceship = new Spaceship(_field.GetSpaceshipPosition(), Vector2.zero, _settings.ElementRadius);
-            ElementCreate?.Invoke(_spaceship);
+            ElementCreate?.Invoke(ElementType.Spaceship, _spaceship);
             
             foreach (var asteroid in _builder.BuildCollection(10))
             {
                 _asteroids.Add(asteroid);
-                ElementCreate?.Invoke(asteroid);
+                ElementCreate?.Invoke(ElementType.Asteroid, asteroid);
             }
         }
 

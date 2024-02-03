@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using App.Code.Model;
+using App.Code.Model.Binding;
 using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Logical.Field;
 using App.Code.Tools;
+using App.Code.View;
 using App.Code.View.Pool;
 using UnityEngine;
 
@@ -11,10 +14,12 @@ namespace App.Code
     [RequireComponent(typeof(ViewPool))]
     public class MonoWorld : MonoBehaviour
     {
+        private readonly Dictionary<IElement, MonoView> _views = new();
+        
         private OpenSpace _space;
         private ViewPool _pool;
 
-        private void Awake()
+        private void Start()
         {
             if (!(_pool = GetComponent<ViewPool>()))
             {
@@ -42,24 +47,31 @@ namespace App.Code
         private void OnDestroy()
         {
             _space.ElementCreate -= OnElementCreate;
-            _space.ElementCreate -= OnElementRemove;
+            _space.ElementRemove -= OnElementRemove;
         }
         
-        private void OnElementCreate(IPositionable positionable)
+        private void OnElementCreate(ElementType elementType, IElement element)
         {
-            // _pool.Obtain()
-                
-            if (positionable is IDirectionable directionable)
+            var view = _pool.Obtain(elementType, element.Position);
+            
+            if (element is IElementDirectionable directionable)
             {
-                directionable.UpdateDirection += v => { };
+                directionable.Update += () => view.transform.rotation = Quaternion.LookRotation(directionable.Direction);
             }
 
-            positionable.UpdatePosition += v => { };
+            element.Update += () => view.transform.position = element.Position;
+            
+            _views.Add(element, view);
         }
 
-        private void OnElementRemove(IPositionable positionable)
+        private void OnElementRemove(IElement element)
         {
+            if (!_views.TryGetValue(element, out var view))
+            {
+                throw new ArgumentException("Unable to find view for element");
+            }
             
+            _pool.Release(view);
         }
     }
 }
