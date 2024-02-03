@@ -70,7 +70,8 @@ namespace App.Code
             {
                 throw new ArgumentException("Unable to find view for element");
             }
-            
+
+            _views.Remove(element);
             _pool.Release(view);
         }
     }
