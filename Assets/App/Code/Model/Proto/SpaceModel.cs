@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using App.Code.Model.Proto.Data;
+using App.Code.Model.Proto.Entities;
 using App.Code.Model.Proto.Field;
 using App.Code.Tools;
 using App.Code.View;
@@ -11,11 +12,13 @@ namespace App.Code.Model.Proto
 {
     public class SpaceModel
     {
-        public Entity[] Entities { get; }
+        public Spaceship Spaceship { get; private set; }
+
+        public EntityLegacy[] Entities { get; }
 
         private readonly GameField _field;
 
-        public SpaceModel(GameField field, Entity[] entities)
+        public SpaceModel(GameField field, EntityLegacy[] entities)
         {
             _field = field;
             Entities = entities;
@@ -30,15 +33,15 @@ namespace App.Code.Model.Proto
                     continue;
                 }
                 
-                if ((Entities[i].Position - position).sqrMagnitude < 1)
-                {
-                    DestroyEntity(i);
-                    return;
-                }
+                // if (Entities[i].HasIntersectionWithPoint(position))
+                // {
+                //     DestroyEntity(i);
+                //     return;
+                // }
             }
         }
 
-        public void AddEntity(Entity entity)
+        public void AddEntity(EntityLegacy entity)
         {
             var index = Array.FindIndex(Entities, e => e == null);
             if (index < 0)
@@ -75,20 +78,19 @@ namespace App.Code.Model.Proto
             }
         }
 
-        private static (Entity left, Entity right) CreateFragments(Entity source)
+        private static (EntityLegacy left, EntityLegacy right) CreateFragments(EntityLegacy source)
         {
-            Entity CreateRotated(int degrees) => new()
+            EntityLegacy CreateRotated(int degrees) => new()
             {
                 ElementType = ElementType.Fragment,
-                Direction = source.Direction.GetRotated(degrees),
+                Movement = source.Movement.GetRotated(degrees) * 2,
                 Position = source.Position,
-                Speed = source.Speed * 2
             };
             
             return (CreateRotated(+20), CreateRotated(-20));
         } 
             
-        public void Update(float delta)
+        public void Update(float deltaTime)
         {
             foreach (var entity in Entities)
             {
@@ -97,8 +99,8 @@ namespace App.Code.Model.Proto
                     continue;
                 }
                 
-                entity.Position += entity.Direction * (entity.Speed * delta);
-                
+                entity.ApplyMovement(deltaTime);
+
                 if (_field.GetMirroredPosition(entity.Position) is (true, var position))
                 {
                     entity.Position = position;

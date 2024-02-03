@@ -19,18 +19,17 @@ namespace App.Code.Tools
             _speed = speed;
         }
 
-        public Entity CreateRandomSingleEntity()
+        public EntityLegacy CreateRandomSingleEntity()
         {
-            return new Entity
+            return new EntityLegacy
             {
                 ElementType = ElementType.Asteroid,
                 Position = _field.GetRandomPosition(),
-                Direction = Vector2.up.GetRotated(Random.Range(0, 360)),
-                Speed = Random.Range(_speed.Min, _speed.Max)
+                Movement = Vector2.up.GetRotated(Random.Range(0, 360)) * Random.Range(_speed.Min, _speed.Max),
             };
         }
 
-        public IEnumerable<Entity> CreateRandomEntities(int count, int total)
+        public IEnumerable<EntityLegacy> CreateRandomEntities(int count, int total)
         {
             for (var i = 0; i < total; i++)
             {

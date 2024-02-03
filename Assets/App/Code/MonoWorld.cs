@@ -55,6 +55,21 @@ namespace App.Code
                 _space.DestroyIntersected(
                     _camera.ScreenToWorldPoint(Mouse.current.position.ReadValue()));
             }
+            
+            if (Keyboard.current.aKey.isPressed)
+            {
+                _space.Spaceship.ApplyRotation(-10 * Time.deltaTime);
+            }
+
+            if (Keyboard.current.dKey.isPressed)
+            {
+                _space.Spaceship.ApplyRotation(+10 * Time.deltaTime);
+            }
+
+            if (Keyboard.current.wKey.isPressed)
+            {
+                _space.Spaceship.ApplyThrust(-10);
+            }
         }
 
         private void RefreshViews()
