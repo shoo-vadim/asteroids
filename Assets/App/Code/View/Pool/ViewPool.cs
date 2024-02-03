@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using App.Code.Model.Binding;
 using UnityEngine;
 
-namespace App.Code.View.Source
+namespace App.Code.View.Pool
 {
     public class ViewPool : MonoBehaviour
     {

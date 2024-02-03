@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using App.Code.Model.Binding;
+using UnityEngine;
 
 namespace App.Code.View
 {

@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using App.Code.Model.Binding;
+using App.Code.Model.Logical;
+using App.Code.Model.Logical.Field;
 using App.Code.Model.Proto;
 using App.Code.Model.Proto.Data;
-using App.Code.Model.Proto.Field;
 using App.Code.View;
 
 
@@ -24,7 +26,7 @@ namespace App.Code.Tools
             return new EntityLegacy
             {
                 ElementType = ElementType.Asteroid,
-                Position = _field.GetRandomPosition(),
+                Position = _field.GetRandomPositionOnBorder(),
                 Movement = Vector2.up.GetRotated(Random.Range(0, 360)) * Random.Range(_speed.Min, _speed.Max),
             };
         }

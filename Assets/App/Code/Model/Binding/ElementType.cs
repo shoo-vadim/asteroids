@@ -1,4 +1,4 @@
-﻿namespace App.Code.View
+﻿namespace App.Code.Model.Binding
 {
     public enum ElementType
     {

@@ -1,4 +1,4 @@
-﻿namespace App.Code.Model.Proto
+﻿namespace App.Code.Model.Logical.Field
 {
     public struct Range<T>
     {

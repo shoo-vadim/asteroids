@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using App.Code.Model.Proto;
+using UnityEngine;
 
-namespace App.Code.Model.Proto.Field
+namespace App.Code.Model.Logical.Field
 {
     public class GameField
     {
@@ -17,7 +18,9 @@ namespace App.Code.Model.Proto.Field
             _y = y;
         }
 
-        public Vector2 GetRandomPosition()
+        public Vector2 GetSpaceshipPosition() => new(0, 0);
+
+        public Vector2 GetRandomPositionOnBorder()
         {
             return new Vector2(
                 Random.Range(_x.Min, _x.Max), 
