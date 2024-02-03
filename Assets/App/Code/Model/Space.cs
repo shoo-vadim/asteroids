@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using App.Code.Model.Proto.Entities;
+using App.Code.Model.Entities;
 
 namespace App.Code.Model
 {

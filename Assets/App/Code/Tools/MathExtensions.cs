@@ -1,5 +1,4 @@
-﻿using App.Code.Model.Proto.Entities.Base;
-using App.Code.Model.Proto.Entities.Interfaces;
+﻿using App.Code.Model.Entities.Base;
 using UnityEngine;
 
 namespace App.Code.Tools

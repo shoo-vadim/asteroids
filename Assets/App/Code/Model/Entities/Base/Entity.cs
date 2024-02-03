@@ -1,9 +1,8 @@
-﻿using App.Code.Model.Proto.Entities.Interfaces;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace App.Code.Model.Proto.Entities.Base
+namespace App.Code.Model.Entities.Base
 {
-    public class Entity : IPoint, IMovable
+    public class Entity
     {
         public Vector2 Position { get; private set; }
         

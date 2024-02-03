@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace App.Code.Model.Proto.Entities.Base
+namespace App.Code.Model.Entities.Base
 {
     public class Body : Entity
     {

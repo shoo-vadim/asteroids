@@ -1,9 +1,8 @@
-﻿using App.Code.Model.Proto.Entities.Interfaces;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace App.Code.Model.Proto.Data
 {
-    public struct Point : IPoint
+    public struct Point
     {
         public Vector2 Position { get; }
 

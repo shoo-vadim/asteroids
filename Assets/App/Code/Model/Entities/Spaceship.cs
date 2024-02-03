@@ -1,8 +1,8 @@
-﻿using App.Code.Model.Proto.Entities.Base;
+﻿using App.Code.Model.Entities.Base;
 using App.Code.Tools;
 using UnityEngine;
 
-namespace App.Code.Model.Proto.Entities
+namespace App.Code.Model.Entities
 {
     public class Spaceship : Body
     {
