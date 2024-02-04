@@ -1,9 +1,10 @@
-﻿using App.Code.Model.Entities.Base;
+﻿using App.Code.Model.Binding.Interfaces.Custom;
+using App.Code.Model.Entities.Base;
 using UnityEngine;
 
 namespace App.Code.Model.Entities
 {
-    public class Bullet : Entity
+    public class Bullet : Element, IBullet
     {
         public float RemainingLifetime { get; private set; }
 

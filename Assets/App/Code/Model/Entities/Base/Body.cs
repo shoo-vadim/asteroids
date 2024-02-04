@@ -2,7 +2,7 @@
 
 namespace App.Code.Model.Entities.Base
 {
-    public class Body : Entity
+    public class Body : Element
     {
         public float Radius { get; }
         

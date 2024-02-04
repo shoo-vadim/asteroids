@@ -2,9 +2,9 @@
 
 namespace App.Code.Model.Binding.Interfaces
 {
-    public interface ISource
+    public interface IElementSource
     {
-        public event Action<ElementType, IElement> ElementCreate;
+        public event Action<IElement> ElementCreate;
         
         public event Action<IElement> ElementRemove;
     }

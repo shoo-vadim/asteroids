@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using App.Code.Model;
 using App.Code.Model.Binding;
 using App.Code.Model.Binding.Interfaces;
+using App.Code.Model.Binding.Interfaces.Custom;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using App.Code.View;
@@ -17,18 +18,20 @@ namespace App.Code
     {
         private readonly GameSettings _settings = new(
             1f,
-            new Range<float>(1, 5),
             new ShipSettings(
                 Vector2.zero, 
                 Vector2.up,
                 180,
                 10,
-                new BulletSettings(2, 1, 16))
+                new BulletSettings(2, 1, 16)),
+            new AsteroidsSettings(
+                new Range<float>(1, 5), 
+                new Range<float>(5, 10))
         );
         
         private readonly Dictionary<IElement, MonoView> _views = new();
         
-        private OpenSpace _space;
+        private SpaceModel _space;
         private ViewPool _pool;
 
         private void Start()
@@ -38,12 +41,12 @@ namespace App.Code
                 throw new InvalidOperationException($"Unable to find {typeof(ViewPool).FullName} component!");
             }
             
-            _space = new OpenSpace(new GameField(30, 15), _settings);
+            _space = new SpaceModel(new GameField(30, 15), _settings);
             
             _space.ElementCreate += OnElementCreate;
             _space.ElementRemove += OnElementRemove;
             
-            _space.BuildWorld();
+            _space.Build();
         }
 
         private void Update()
@@ -73,7 +76,7 @@ namespace App.Code
                 _space.ApplyShot();
             }
 
-            _space.ApplyDelta(Time.deltaTime);
+            _space.Update(Time.deltaTime);
         }
         
         private void OnDestroy()
@@ -82,14 +85,30 @@ namespace App.Code
             _space.ElementRemove -= OnElementRemove;
         }
 
-        private void OnElementCreate(ElementType elementType, IElement element)
+        private ElementType GetElementType(IElement element)
         {
-            var view = _pool.Obtain(elementType, element.Position);
-            
-            if (element is IElementDirectionable directionable)
+            return element switch
             {
-                directionable.Update += () => view.transform.rotation =
-                        Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, directionable.Direction));
+                IAsteroid { IsFragment: true } => 
+                    ElementType.Fragment, 
+                IAsteroid { IsFragment: false } => 
+                    ElementType.Asteroid,
+                IBullet => 
+                    ElementType.Bullet,
+                ISpaceship => 
+                    ElementType.Spaceship,
+            };
+        }
+
+        private void OnElementCreate(IElement element)
+        {
+            var view = _pool.Obtain(GetElementType(element), element.Position);
+            
+            // TODO: Rewrite binding
+            if (element is ISpaceship spaceship)
+            {
+                spaceship.Update += () => view.transform.rotation =
+                        Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, spaceship.Direction));
             }
 
             element.Update += () => view.transform.position = element.Position;

@@ -1,5 +1,4 @@
-﻿using App.Code.Model.Entities.Base;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace App.Code.Model.Logical.Extensions
 {

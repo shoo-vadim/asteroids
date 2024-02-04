@@ -4,15 +4,15 @@
     {
         public float ElementRadius { get; }
         
-        public Range<float> AsteroidsSpeed { get; }
-        
         public ShipSettings Spaceship { get; }
 
-        public GameSettings(float elementRadius, Range<float> asteroidsSpeed, ShipSettings spaceshipSettings)
+        public AsteroidsSettings Asteroids { get; }
+
+        public GameSettings(float elementRadius, ShipSettings spaceship, AsteroidsSettings asteroids)
         {
             ElementRadius = elementRadius;
-            AsteroidsSpeed = asteroidsSpeed;
-            Spaceship = spaceshipSettings;
+            Spaceship = spaceship;
+            Asteroids = asteroids;
         }
     }
 }

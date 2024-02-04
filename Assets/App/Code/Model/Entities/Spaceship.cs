@@ -1,4 +1,4 @@
-﻿using App.Code.Model.Binding.Interfaces;
+﻿using App.Code.Model.Binding.Interfaces.Custom;
 using App.Code.Model.Entities.Base;
 using App.Code.Model.Logical.Extensions;
 using App.Code.Settings;
@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace App.Code.Model.Entities
 {
-    public class Spaceship : Body, IElementDirectionable
+    public class Spaceship : Body, ISpaceship
     {
         public Vector2 Direction { get; private set; }
         

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace App.Code.Model.Entities.Base
 {
-    public class Entity : IElement
+    public class Element : IElement
     {
         public event Action Update;
         
@@ -13,7 +13,7 @@ namespace App.Code.Model.Entities.Base
         
         public Vector2 Movement { get; protected set; }
 
-        protected Entity(Vector2 position, Vector2 movement)
+        protected Element(Vector2 position, Vector2 movement)
         {
             Position = position;
             Movement = movement;
