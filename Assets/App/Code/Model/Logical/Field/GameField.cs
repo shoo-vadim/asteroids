@@ -1,5 +1,7 @@
-﻿using App.Code.Settings;
+﻿using System;
+using App.Code.Settings;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace App.Code.Model.Logical.Field
 {
@@ -20,9 +22,18 @@ namespace App.Code.Model.Logical.Field
 
         public Vector2 GetRandomPositionOnBorder()
         {
-            return new Vector2(
-                Random.Range(_x.Min, _x.Max), 
-                Random.Range(_y.Min, _y.Max));
+            return (FieldBorder)Random.Range(0, 4) switch
+            {
+                FieldBorder.Top => new Vector2(
+                    Random.Range(_x.Min, _x.Max), _y.Max),
+                FieldBorder.Down => new Vector2(
+                    Random.Range(_x.Min, _x.Max), _y.Min),
+                FieldBorder.Left => new Vector2(
+                    _x.Min, Random.Range(_y.Min, _y.Max)),
+                FieldBorder.Right => new Vector2(
+                    _x.Min, Random.Range(_y.Min, _y.Max)),
+                _ => throw new ArgumentOutOfRangeException(nameof(FieldBorder))
+            };
         }
 
         public MirroredPosition GetMirroredPosition(Vector2 position)
