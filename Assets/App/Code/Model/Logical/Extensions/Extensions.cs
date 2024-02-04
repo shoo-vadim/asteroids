@@ -1,17 +1,10 @@
-﻿using App.Code.Model.Entities;
+﻿using App.Code.Settings;
 using UnityEngine;
 
 namespace App.Code.Model.Logical.Extensions
 {
     public static class Extensions
     {
-        public static Asteroid CreateFragment(this Asteroid asteroid, float movementModifier)
-        {
-            return new Asteroid(
-                asteroid.Position,
-                asteroid.Movement.GetRotated(Random.Range(0, 360) * movementModifier),
-                asteroid.Radius,
-                true);
-        }
+        public static float GetRandom(this Range<float> range) => Random.Range(range.Min, range.Max);
     }
 }

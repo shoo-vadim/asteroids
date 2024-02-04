@@ -7,7 +7,7 @@ namespace App.Code.Settings
         public Vector2 Position { get; }
         
         public Vector2 Direction { get; }
-        
+
         public float Rotation { get; }
         
         public float Thrust { get; }

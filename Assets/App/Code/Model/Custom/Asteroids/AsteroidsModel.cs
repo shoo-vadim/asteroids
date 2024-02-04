@@ -16,30 +16,34 @@ namespace App.Code.Model.Custom.Asteroids
         public event Action<IElement> ElementRemove;
 
         private readonly GameField _field;
+        private readonly AsteroidsSettings _settings;
         private readonly AsteroidsBuilder _builder;
-        
+
         private readonly List<Asteroid> _asteroids = new();
+
+        private float _timerSpawn;
 
         public AsteroidsModel(GameField field, GameSettings settings)
         {
             _field = field;
+            _settings = settings.Asteroids;
             _builder = new AsteroidsBuilder(field, settings.Asteroids.Speed);
+        }
+        
+        private void AddAndNotify(Asteroid asteroid)
+        {
+            _asteroids.Add(asteroid);
+            ElementCreate?.Invoke(asteroid);
         }
 
         public void Build(int count)
         {
+            _timerSpawn = _settings.Spawn.GetRandom();
+
             foreach (var asteroid in _builder.BuildCollection(count))
             {
-                _asteroids.Add(asteroid);
-                ElementCreate?.Invoke(asteroid);
+                AddAndNotify(asteroid);
             }
-        }
-        
-        private void CreateFragment(Asteroid asteroid)
-        {
-            var fragment = asteroid.CreateFragment(2);
-            _asteroids.Add(fragment);
-            ElementCreate?.Invoke(fragment);
         }
 
         public bool ApplyBullet(Vector2 position)
@@ -54,8 +58,8 @@ namespace App.Code.Model.Custom.Asteroids
 
                     if (!asteroid.IsFragment)
                     {
-                        CreateFragment(asteroid);
-                        CreateFragment(asteroid);
+                        AddAndNotify(asteroid.CreateFragment(2));
+                        AddAndNotify(asteroid.CreateFragment(2));
                     }
 
                     return true;
@@ -65,12 +69,29 @@ namespace App.Code.Model.Custom.Asteroids
             return false;
         }
 
-        public void Update(float deltaTime)
+        private void UpdateSpawn(float deltaTime)
+        {
+            _timerSpawn -= deltaTime;
+
+            if (_timerSpawn < 0)
+            {
+                AddAndNotify(_builder.BuildSingle());
+                _timerSpawn = _settings.Spawn.GetRandom();
+            }
+        }
+
+        private void UpdateMovement(float deltaTime)
         {
             foreach (var asteroid in _asteroids)
             {
                 asteroid.ApplyMovement(deltaTime, _field);
             }
+        }
+
+        public void Update(float deltaTime)
+        {
+            UpdateSpawn(deltaTime);
+            UpdateMovement(deltaTime);
         }
     }
 }

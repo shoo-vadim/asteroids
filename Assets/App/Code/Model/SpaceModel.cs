@@ -30,17 +30,17 @@ namespace App.Code.Model
             _asteroids.ElementCreate += OnElementCreate;
             _asteroids.ElementRemove += OnElementRemove;
 
-            _bullets = new BulletsModel(field, _asteroids, _settings.Spaceship.Bullet.Lifetime);
+            _bullets = new BulletsModel(field, _settings.Spaceship.Bullet, _asteroids);
             _bullets.ElementCreate += OnElementCreate;
             _bullets.ElementRemove += OnElementRemove;
         }
         
-        public void Build()
+        public void Build(int asteroidsCount)
         {
             Spaceship = new Spaceship(_settings.Spaceship, Vector2.zero, _settings.ElementRadius);
             ElementCreate?.Invoke(Spaceship);
             
-            _asteroids.Build(10);
+            _asteroids.Build(asteroidsCount);
         }
 
         public void ApplyShot()

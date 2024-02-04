@@ -26,7 +26,7 @@ namespace App.Code
                 new BulletSettings(2, 1, 16)),
             new AsteroidsSettings(
                 new Range<float>(1, 5), 
-                new Range<float>(5, 10))
+                new Range<float>(1, 2))
         );
         
         private readonly Dictionary<IElement, MonoView> _views = new();
@@ -46,7 +46,7 @@ namespace App.Code
             _space.ElementCreate += OnElementCreate;
             _space.ElementRemove += OnElementRemove;
             
-            _space.Build();
+            _space.Build(10);
         }
 
         private void Update()
@@ -85,7 +85,7 @@ namespace App.Code
             _space.ElementRemove -= OnElementRemove;
         }
 
-        private ElementType GetElementType(IElement element)
+        private static ElementType GetElementType(IElement element)
         {
             return element switch
             {
@@ -97,6 +97,7 @@ namespace App.Code
                     ElementType.Bullet,
                 ISpaceship => 
                     ElementType.Spaceship,
+                _ => throw new ArgumentOutOfRangeException(nameof(element), element, null)
             };
         }
 

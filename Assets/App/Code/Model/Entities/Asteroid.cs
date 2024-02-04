@@ -1,5 +1,6 @@
 ﻿using App.Code.Model.Binding.Interfaces.Custom;
 using App.Code.Model.Entities.Base;
+using App.Code.Model.Logical.Extensions;
 using UnityEngine;
 
 namespace App.Code.Model.Entities
@@ -12,6 +13,15 @@ namespace App.Code.Model.Entities
             base(position, movement, radius)
         {
             IsFragment = isFragment;
+        }
+        
+        public Asteroid CreateFragment(float movementModifier)
+        {
+            return new Asteroid(
+                Position,
+                Movement.GetRotated(Random.Range(0, 360) * movementModifier),
+                Radius,
+                true);
         }
     }
 }
