@@ -11,5 +11,21 @@ namespace App.Code.Model.Entities.Base
         {
             Radius = radius;
         }
+        public bool HasIntersectionWithRay(Ray2D ray)
+        {
+            var dot = Vector2.Dot(Position - ray.origin,ray.direction);
+            var closest = ray.origin + ray.direction * dot;
+            return dot > 0 && (closest - Position).sqrMagnitude < Mathf.Pow(Radius, 2);
+        }
+
+        public bool HasIntersectionWithPoint(Vector2 point)
+        {
+            return (Position - point).sqrMagnitude < Mathf.Pow(Radius, 2);
+        }
+
+        public bool HasIntersectionWithBody(Body body)
+        {
+            return (Position - body.Position).sqrMagnitude < Mathf.Pow(Radius + body.Radius, 2);
+        }
     }
 }
