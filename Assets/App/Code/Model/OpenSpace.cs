@@ -6,6 +6,7 @@ using App.Code.Model.Entities;
 using App.Code.Model.Logical;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
+using App.Code.Tools;
 using UnityEngine;
 
 namespace App.Code.Model
@@ -34,7 +35,7 @@ namespace App.Code.Model
         
         public void BuildWorld()
         {
-            _spaceship = new Spaceship(_settings.Ship, Vector2.zero, _settings.ElementRadius);
+            _spaceship = new Spaceship(_settings.Spaceship, Vector2.zero, _settings.ElementRadius);
             ElementCreate?.Invoke(ElementType.Spaceship, _spaceship);
             
             foreach (var asteroid in _builder.BuildCollection(10))
@@ -44,7 +45,18 @@ namespace App.Code.Model
             }
         }
 
-        public void ApplyDelta(float deltaTime)
+        public void ApplyShot()
+        {
+            var bullet = new Bullet(
+                _spaceship.Position + _spaceship.Direction, 
+                _spaceship.Direction * _settings.Spaceship.Bullet.Speed,
+                _settings.Spaceship.Bullet.Lifetime);
+            
+            _bullets.Add(bullet);
+            ElementCreate?.Invoke(ElementType.Bullet, bullet);
+        }
+
+        private void ApplyMovement(float deltaTime)
         {
             _spaceship.ApplyMovement(deltaTime, _field);
 
@@ -56,7 +68,41 @@ namespace App.Code.Model
             foreach (var asteroid in _asteroids)
             {
                 asteroid.ApplyMovement(deltaTime, _field);
+            }            
+        }
+
+        private void ApplyBulletsLifetime(float deltaTime)
+        {
+            for (var b = _bullets.Count - 1; b >= 0; b--)
+            {
+                var bullet = _bullets[b];
+                
+                if (!bullet.ApplyLifetime(deltaTime))
+                {
+                    _bullets.RemoveAt(b);
+                    ElementRemove?.Invoke(bullet);
+                    continue;
+                }
+
+                for (var a = _asteroids.Count - 1; a >= 0; a--)
+                {
+                    var asteroid = _asteroids[a];
+                    if (asteroid.HasIntersectionWithPoint(bullet.Position))
+                    {
+                        _asteroids.RemoveAt(a);
+                        ElementRemove?.Invoke(asteroid);
+                        _bullets.RemoveAt(b);
+                        ElementRemove?.Invoke(bullet);
+                        break;
+                    }
+                }
             }
+        }
+
+        public void ApplyDelta(float deltaTime)
+        {
+            ApplyMovement(deltaTime);
+            ApplyBulletsLifetime(deltaTime);
         }
     }
 }

@@ -2,10 +2,11 @@
 {
     public enum ElementType
     {
-        Unknown,
-        Asteroid,
-        Fragment,
-        Aliens,
-        Spaceship
+        Unknown = 0,
+        Asteroid = 1,
+        Fragment = 2,
+        Aliens = 3,
+        Spaceship = 4,
+        Bullet = 5
     }
 }

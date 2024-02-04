@@ -22,7 +22,8 @@ namespace App.Code
                 Vector2.zero, 
                 Vector2.up,
                 180,
-                10)
+                10,
+                new BulletSettings(2, 1, 16))
         );
         
         private readonly Dictionary<IElement, MonoView> _views = new();
@@ -49,24 +50,29 @@ namespace App.Code
         {
             if (Keyboard.current.dKey.isPressed)
             {
-                _space.Spaceship.ApplyRotation(+_settings.Ship.Rotation * Time.deltaTime);
+                _space.Spaceship.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime);
             }
 
             if (Keyboard.current.aKey.isPressed)
             {
-                _space.Spaceship.ApplyRotation(-_settings.Ship.Rotation * Time.deltaTime);
+                _space.Spaceship.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
             }
 
             if (Keyboard.current.wKey.isPressed)
             {
-                _space.Spaceship.ApplyThrust(+_settings.Ship.Thrust * Time.deltaTime);
+                _space.Spaceship.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
             }
             
             if (Keyboard.current.sKey.isPressed)
             {
-                _space.Spaceship.ApplyThrust(-_settings.Ship.Thrust * Time.deltaTime);
+                _space.Spaceship.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
             }
-            
+
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                _space.ApplyShot();
+            }
+
             _space.ApplyDelta(Time.deltaTime);
         }
         
