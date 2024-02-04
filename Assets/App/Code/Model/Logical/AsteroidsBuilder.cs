@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical.Field;
-using App.Code.Model.Proto;
+using App.Code.Settings;
 using App.Code.Tools;
 using UnityEngine;
 

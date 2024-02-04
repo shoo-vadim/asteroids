@@ -2,11 +2,9 @@
 using System.Linq;
 using App.Code.Model.Binding;
 using App.Code.Model.Entities;
-using App.Code.Model.Logical;
 using App.Code.Model.Logical.Field;
 using App.Code.Model.Proto.Data;
 using App.Code.Tools;
-using App.Code.View;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

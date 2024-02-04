@@ -1,4 +1,4 @@
-﻿namespace App.Code.Model.Logical.Field
+﻿namespace App.Code.Settings
 {
     public struct Range<T>
     {

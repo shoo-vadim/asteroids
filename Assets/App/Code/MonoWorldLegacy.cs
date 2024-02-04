@@ -1,7 +1,7 @@
 ﻿using System.Linq;
-using App.Code.Model.Logical;
 using App.Code.Model.Logical.Field;
 using App.Code.Model.Proto;
+using App.Code.Settings;
 using App.Code.Tools;
 using App.Code.View;
 using App.Code.View.Pool;

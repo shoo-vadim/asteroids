@@ -4,7 +4,7 @@ using App.Code.Model;
 using App.Code.Model.Binding;
 using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Logical.Field;
-using App.Code.Tools;
+using App.Code.Settings;
 using App.Code.View;
 using App.Code.View.Pool;
 using UnityEngine;
@@ -30,7 +30,8 @@ namespace App.Code
                 new GameField(30, 15), 
                 new GameSettings(
                     1f,
-                    new Range<float>(1, 5)
+                    new Range<float>(1, 5),
+                    new ShipSettings(Vector2.zero, Vector2.up)
                 ));
             
             _space.ElementCreate += OnElementCreate;
@@ -42,6 +43,7 @@ namespace App.Code
         private void Update()
         {
             _space.ApplyDelta(Time.deltaTime);
+            _space.Spaceship.ApplyRotation(10 * Time.deltaTime);
         }
         
         private void OnDestroy()
@@ -56,7 +58,7 @@ namespace App.Code
             
             if (element is IElementDirectionable directionable)
             {
-                directionable.Update += () => view.transform.rotation = Quaternion.LookRotation(directionable.Direction);
+                directionable.Update += () => view.transform.rotation = Quaternion.identity;
             }
 
             element.Update += () => view.transform.position = element.Position;

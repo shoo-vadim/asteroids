@@ -1,5 +1,4 @@
 ﻿using App.Code.Model.Binding;
-using App.Code.View;
 using UnityEngine;
 
 namespace App.Code.Model.Proto.Data

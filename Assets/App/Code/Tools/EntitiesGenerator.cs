@@ -1,11 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using App.Code.Model.Binding;
-using App.Code.Model.Logical;
 using App.Code.Model.Logical.Field;
-using App.Code.Model.Proto;
 using App.Code.Model.Proto.Data;
-using App.Code.View;
+using App.Code.Settings;
 
 
 namespace App.Code.Tools

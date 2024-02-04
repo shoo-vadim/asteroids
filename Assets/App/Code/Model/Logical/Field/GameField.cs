@@ -1,4 +1,4 @@
-﻿using App.Code.Model.Proto;
+﻿using App.Code.Settings;
 using UnityEngine;
 
 namespace App.Code.Model.Logical.Field
@@ -17,8 +17,6 @@ namespace App.Code.Model.Logical.Field
             _x = x;
             _y = y;
         }
-
-        public Vector2 GetSpaceshipPosition() => new(0, 0);
 
         public Vector2 GetRandomPositionOnBorder()
         {

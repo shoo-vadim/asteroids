@@ -28,7 +28,9 @@ namespace App.Code.Model.Entities.Base
                 Position = position;
             }
             
-            Update?.Invoke();
+            TriggerUpdate();
         }
+
+        protected void TriggerUpdate() => Update?.Invoke();
     }
 }

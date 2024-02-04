@@ -5,7 +5,7 @@ using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical;
 using App.Code.Model.Logical.Field;
-using App.Code.Tools;
+using App.Code.Settings;
 using UnityEngine;
 
 namespace App.Code.Model
@@ -14,6 +14,8 @@ namespace App.Code.Model
     {
         public event Action<ElementType, IElement> ElementCreate;
         public event Action<IElement> ElementRemove;
+
+        public Spaceship Spaceship => _spaceship;
 
         private readonly GameField _field;
         private readonly GameSettings _settings;
@@ -32,7 +34,7 @@ namespace App.Code.Model
         
         public void BuildWorld()
         {
-            _spaceship = new Spaceship(_field.GetSpaceshipPosition(), Vector2.zero, _settings.ElementRadius);
+            _spaceship = new Spaceship(_settings.Ship, Vector2.zero, _settings.ElementRadius);
             ElementCreate?.Invoke(ElementType.Spaceship, _spaceship);
             
             foreach (var asteroid in _builder.BuildCollection(10))
