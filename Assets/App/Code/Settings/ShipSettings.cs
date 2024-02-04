@@ -7,11 +7,18 @@ namespace App.Code.Settings
         public Vector2 Position { get; }
         
         public Vector2 Direction { get; }
+        
+        public float Rotation { get; }
+        
+        public float Thrust { get; }
+        
 
-        public ShipSettings(Vector2 position, Vector2 direction)
+        public ShipSettings(Vector2 position, Vector2 direction, float rotation, float thrust)
         {
             Position = position;
             Direction = direction;
+            Rotation = rotation;
+            Thrust = thrust;
         }
     }
 }
