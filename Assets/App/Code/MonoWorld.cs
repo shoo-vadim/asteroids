@@ -43,7 +43,6 @@ namespace App.Code
         private void Update()
         {
             _space.ApplyDelta(Time.deltaTime);
-            _space.Spaceship.ApplyRotation(10 * Time.deltaTime);
         }
         
         private void OnDestroy()
@@ -51,14 +50,15 @@ namespace App.Code
             _space.ElementCreate -= OnElementCreate;
             _space.ElementRemove -= OnElementRemove;
         }
-        
+
         private void OnElementCreate(ElementType elementType, IElement element)
         {
             var view = _pool.Obtain(elementType, element.Position);
             
             if (element is IElementDirectionable directionable)
             {
-                directionable.Update += () => view.transform.rotation = Quaternion.identity;
+                directionable.Update += () => view.transform.rotation =
+                        Quaternion.Euler(0, 0, Vector2.SignedAngle(Vector2.up, directionable.Direction));
             }
 
             element.Update += () => view.transform.position = element.Position;

@@ -26,7 +26,7 @@ namespace App.Code.Tools
 
         public static Vector2 GetRotated(this Vector2 vector, float degrees)
         {
-            return Quaternion.AngleAxis(degrees, Vector3.forward) * vector;
+            return Quaternion.AngleAxis(degrees, Vector3.back) * vector;
         }
     }
 }

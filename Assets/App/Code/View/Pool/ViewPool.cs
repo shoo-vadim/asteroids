@@ -29,8 +29,6 @@ namespace App.Code.View.Pool
             }
             
             var view = Instantiate(prefab, _root.transform);
-            view.Refresh(position);
-            
             return view;
         }
 

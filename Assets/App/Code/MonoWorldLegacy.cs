@@ -36,7 +36,6 @@ namespace App.Code
         {
             _space.Update(Time.deltaTime);
             HandleInput();
-            RefreshViews();
         }
 
         private void HandleInput()
@@ -70,48 +69,6 @@ namespace App.Code
             if (Keyboard.current.wKey.isPressed)
             {
                 _space.Spaceship.ApplyThrust(-10);
-            }
-        }
-
-        private void RefreshViews()
-        {
-            for (var i = 0; i < _space.Entities.Length; i++)
-            {
-                RefreshByIndex(i);
-            }
-        }
-
-        private void RefreshByIndex(int i)
-        {
-            ref var view = ref _views[i];
-            ref var entity = ref _space.Entities[i];
-
-            if (!view)
-            {
-                if (entity != null)
-                {
-                    view = _pool.Obtain(entity.ElementType, entity.Position);
-                }
-            }
-            else
-            {
-                if (entity != null)
-                {
-                    if (view.ElementType == entity.ElementType)
-                    {
-                        view.Refresh(entity.Position);
-                    }
-                    else
-                    {
-                        _pool.Release(view);
-                        view = _pool.Obtain(entity.ElementType, entity.Position);
-                    }                    
-                }
-                else
-                {
-                    _pool.Release(view);
-                    view = null;
-                }
             }
         }
     }
