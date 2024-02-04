@@ -26,7 +26,7 @@ namespace App.Code
                 new BulletSettings(2, 1, 16)),
             new AsteroidsSettings(
                 new Range<float>(1, 5), 
-                new Range<float>(1, 2))
+                new Range<float>(5, 10))
         );
         
         private readonly Dictionary<IElement, MonoView> _views = new();
