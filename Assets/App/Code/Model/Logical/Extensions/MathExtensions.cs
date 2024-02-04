@@ -1,7 +1,7 @@
 ﻿using App.Code.Model.Entities.Base;
 using UnityEngine;
 
-namespace App.Code.Tools
+namespace App.Code.Model.Logical.Extensions
 {
     public static class MathExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities.Base;
+using App.Code.Model.Logical.Extensions;
 using App.Code.Settings;
-using App.Code.Tools;
 using UnityEngine;
 
 namespace App.Code.Model.Entities

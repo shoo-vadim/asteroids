@@ -4,9 +4,9 @@ using App.Code.Model.Binding;
 using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical;
+using App.Code.Model.Logical.Extensions;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
-using App.Code.Tools;
 using UnityEngine;
 
 namespace App.Code.Model
@@ -68,7 +68,14 @@ namespace App.Code.Model
             foreach (var asteroid in _asteroids)
             {
                 asteroid.ApplyMovement(deltaTime, _field);
-            }            
+            }
+        }
+
+        private void CreateFragment(Asteroid asteroid)
+        {
+            var fragment = asteroid.CreateFragment(2);
+            _asteroids.Add(fragment);
+            ElementCreate?.Invoke(ElementType.Fragment, fragment);
         }
 
         private void ApplyBulletsLifetime(float deltaTime)
@@ -93,6 +100,13 @@ namespace App.Code.Model
                         ElementRemove?.Invoke(asteroid);
                         _bullets.RemoveAt(b);
                         ElementRemove?.Invoke(bullet);
+
+                        if (!asteroid.IsFragment)
+                        {
+                            CreateFragment(asteroid);
+                            CreateFragment(asteroid);
+                        }
+                        
                         break;
                     }
                 }
