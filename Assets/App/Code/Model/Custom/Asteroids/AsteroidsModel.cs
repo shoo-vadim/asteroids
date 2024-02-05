@@ -73,7 +73,15 @@ namespace App.Code.Model.Custom.Asteroids
 
         public bool HasAnyIntersection(Body body)
         {
-            return _asteroids.Any(t => t.HasIntersectionWithBody(body));
+            foreach (var t in _asteroids)
+            {
+                if (t.HasIntersectionWithBody(body))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private void UpdateSpawn(float deltaTime)
