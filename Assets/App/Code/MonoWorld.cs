@@ -23,7 +23,7 @@ namespace App.Code
                 Vector2.up,
                 180,
                 10,
-                new BulletSettings(2, 1, 16)),
+                new BulletSettings(2, 0.5f, 16)),
             new AsteroidsSettings(
                 new Range<float>(1, 5), 
                 new Range<float>(5, 10))
@@ -31,7 +31,7 @@ namespace App.Code
         
         private readonly Dictionary<IElement, MonoView> _views = new();
         
-        private SpaceModel _space;
+        private ISpaceModel _space;
         private ViewPool _pool;
 
         private void Start()
@@ -45,6 +45,7 @@ namespace App.Code
             
             _space.ElementCreate += OnElementCreate;
             _space.ElementRemove += OnElementRemove;
+            _space.GameOver += OnGameOver;
             
             _space.Build(10);
         }
@@ -53,22 +54,22 @@ namespace App.Code
         {
             if (Keyboard.current.dKey.isPressed)
             {
-                _space.Spaceship.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime);
+                _space.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime);
             }
 
             if (Keyboard.current.aKey.isPressed)
             {
-                _space.Spaceship.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
+                _space.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
             }
 
             if (Keyboard.current.wKey.isPressed)
             {
-                _space.Spaceship.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
+                _space.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
             }
             
             if (Keyboard.current.sKey.isPressed)
             {
-                _space.Spaceship.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
+                _space.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
             }
 
             if (Keyboard.current.spaceKey.wasPressedThisFrame)
@@ -126,6 +127,11 @@ namespace App.Code
 
             _views.Remove(element);
             _pool.Release(view);
+        }
+
+        private void OnGameOver()
+        {
+            Debug.Log("GameOver");
         }
     }
 }

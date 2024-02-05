@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities;
+using App.Code.Model.Entities.Base;
 using App.Code.Model.Logical;
 using App.Code.Model.Logical.Extensions;
 using App.Code.Model.Logical.Field;
@@ -67,6 +69,11 @@ namespace App.Code.Model.Custom.Asteroids
             }
 
             return false;
+        }
+
+        public bool HasAnyIntersection(Body body)
+        {
+            return _asteroids.Any(t => t.HasIntersectionWithBody(body));
         }
 
         private void UpdateSpawn(float deltaTime)

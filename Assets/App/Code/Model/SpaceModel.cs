@@ -9,18 +9,31 @@ using UnityEngine;
 
 namespace App.Code.Model
 {
-    public class SpaceModel : IElementSource
+    public interface ISpaceModel : IElementSource
     {
+        public event Action GameOver;
+        
+        public void ApplyShot();
+        public void ApplyRotation(float degrees);
+        public void ApplyThrust(float force);
+        
+        public void Build(int asteroidsCount);
+        public void Update(float deltaTime);
+    }
+    
+    public class SpaceModel : ISpaceModel
+    {
+        public event Action GameOver;
         public event Action<IElement> ElementCreate;
         public event Action<IElement> ElementRemove;
-
-        public Spaceship Spaceship { get; private set; }
-
+        
         private readonly GameField _field;
         private readonly GameSettings _settings;
 
         private readonly AsteroidsModel _asteroids;
         private readonly BulletsModel _bullets;
+
+        private Spaceship _spaceship;
 
         public SpaceModel(GameField field, GameSettings settings)
         {
@@ -37,8 +50,8 @@ namespace App.Code.Model
         
         public void Build(int asteroidsCount)
         {
-            Spaceship = new Spaceship(_settings.Spaceship, Vector2.zero, _settings.ElementRadius);
-            ElementCreate?.Invoke(Spaceship);
+            _spaceship = new Spaceship(_settings.Spaceship, Vector2.zero, _settings.ElementRadius);
+            ElementCreate?.Invoke(_spaceship);
             
             _asteroids.Build(asteroidsCount);
         }
@@ -46,16 +59,31 @@ namespace App.Code.Model
         public void ApplyShot()
         {
             _bullets.Create(
-                Spaceship.Position + Spaceship.Direction, 
-                Spaceship.Direction * _settings.Spaceship.Bullet.Speed);
+                _spaceship.Position + _spaceship.Direction, 
+                _spaceship.Direction * _settings.Spaceship.Bullet.Speed);
+        }
+
+        public void ApplyRotation(float degrees)
+        {
+            _spaceship.ApplyRotation(degrees);
+        }
+
+        public void ApplyThrust(float force)
+        {
+            _spaceship.ApplyThrust(force);
         }
 
         public void Update(float deltaTime)
         {
-            Spaceship.ApplyMovement(deltaTime, _field);
+            _spaceship.ApplyMovement(deltaTime, _field);
             
             _asteroids.Update(deltaTime);
             _bullets.Update(deltaTime);
+
+            if (_asteroids.HasAnyIntersection(_spaceship))
+            {
+                GameOver?.Invoke();
+            }
         }
 
         private void OnElementCreate(IElement element) => ElementCreate?.Invoke(element);
