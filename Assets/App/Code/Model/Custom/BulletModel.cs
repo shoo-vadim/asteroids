@@ -9,20 +9,20 @@ using UnityEngine;
 
 namespace App.Code.Model.Custom
 {
-    public class BulletsModel : ISource<Bullet>
+    public class BulletModel : ISource<Bullet>
     {
         public event Action<Bullet> Create;
         public event Action<Bullet> Remove;
         
         private readonly GameField _field;
         private readonly BulletSettings _settings;
-        private readonly AsteroidsModel _asteroids;
+        private readonly AsteroidModel _asteroids;
 
         private readonly List<Bullet> _bullets = new();
 
         private float _timerReload;
 
-        public BulletsModel(GameField field, BulletSettings settings, AsteroidsModel asteroids)
+        public BulletModel(GameField field, BulletSettings settings, AsteroidModel asteroids)
         {
             _field = field;
             _settings = settings;

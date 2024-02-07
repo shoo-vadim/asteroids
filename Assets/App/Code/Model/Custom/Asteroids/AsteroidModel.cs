@@ -11,24 +11,24 @@ using UnityEngine;
 
 namespace App.Code.Model.Custom.Asteroids
 {
-    public class AsteroidsModel : ISource<Asteroid>
+    public class AsteroidModel : ISource<Asteroid>
     {
         public event Action<Asteroid> Create;
         public event Action<Asteroid> Remove;
         
         private readonly GameField _field;
-        private readonly AsteroidsSettings _settings;
-        private readonly AsteroidsBuilder _builder;
+        private readonly AsteroidSettings _settings;
+        private readonly AsteroidBuilder _builder;
 
         private readonly List<Asteroid> _asteroids = new();
 
         private float _timerSpawn;
 
-        public AsteroidsModel(GameField field, GameSettings settings)
+        public AsteroidModel(GameField field, AsteroidSettings settings)
         {
             _field = field;
-            _settings = settings.Asteroids;
-            _builder = new AsteroidsBuilder(field, settings.Asteroids.Speed);
+            _settings = settings;
+            _builder = new AsteroidBuilder(field, settings.Speed);
         }
         
         private void AddAndNotify(Asteroid asteroid)

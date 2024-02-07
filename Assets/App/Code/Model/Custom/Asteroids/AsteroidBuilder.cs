@@ -7,12 +7,12 @@ using UnityEngine;
 
 namespace App.Code.Model.Logical
 {
-    public class AsteroidsBuilder
+    public class AsteroidBuilder
     {
         private readonly GameField _field;
         private readonly Range<float> _speed;
         
-        public AsteroidsBuilder(GameField field, Range<float> speed)
+        public AsteroidBuilder(GameField field, Range<float> speed)
         {
             _field = field;
             _speed = speed;

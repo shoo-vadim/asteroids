@@ -11,6 +11,7 @@ namespace App.Code.Model.Entities.Base
         {
             Radius = radius;
         }
+        
         public bool HasIntersectionWithRay(Ray2D ray)
         {
             var dot = Vector2.Dot(Position - ray.origin,ray.direction);

@@ -7,8 +7,6 @@ namespace App.Code.Model.Entities.Base
 {
     public class Element : IPositionable
     {
-        public event Action Update;
-
         public event Action<Vector2> PositionChange;
         
         public Vector2 Position { get; private set; }
@@ -30,9 +28,7 @@ namespace App.Code.Model.Entities.Base
                 Position = position;
             }
             
-            TriggerUpdate();
+            PositionChange?.Invoke(Position);
         }
-
-        protected void TriggerUpdate() => Update?.Invoke();
     }
 }

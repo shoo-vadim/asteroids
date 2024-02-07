@@ -1,32 +1,33 @@
 ﻿using System;
 using App.Code.Model.Entities.Base;
+using App.Code.Model.Interfaces;
 using App.Code.Model.Logical.Extensions;
-using App.Code.Settings;
 using UnityEngine;
-using ISpaceship = App.Code.Model.Interfaces.ISpaceship;
 
 namespace App.Code.Model.Entities
 {
     public class Spaceship : Body, ISpaceship
     {
         public event Action<Vector2> DirectionChange;
+        public event Action<Vector2> MovementChange;
         public Vector2 Direction { get; private set; }
         
-        public Spaceship(ShipSettings shipSettings, Vector2 movement, float radius) : 
-            base(shipSettings.Position, movement, radius)
+        public Spaceship(Vector2 position, Vector2 direction, Vector2 movement, float radius) : 
+            base(position, movement, radius)
         {
-            Direction = shipSettings.Direction;
+            Direction = direction;
         }
 
         public void ApplyRotation(float degrees)
         {
             Direction = Direction.GetRotated(degrees);
-            TriggerUpdate();
+            DirectionChange?.Invoke(Direction);
         }
 
         public void ApplyThrust(float force)
         {
             Movement += Direction * force;
+            MovementChange?.Invoke(Movement);
         }
     }
 }

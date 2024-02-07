@@ -2,17 +2,14 @@
 {
     public class GameSettings
     {
-        public float ElementRadius { get; }
-        
         public ShipSettings Spaceship { get; }
 
-        public AsteroidsSettings Asteroids { get; }
+        public AsteroidSettings Asteroid { get; }
 
-        public GameSettings(float elementRadius, ShipSettings spaceship, AsteroidsSettings asteroids)
+        public GameSettings(ShipSettings spaceship, AsteroidSettings asteroid)
         {
-            ElementRadius = elementRadius;
             Spaceship = spaceship;
-            Asteroids = asteroids;
+            Asteroid = asteroid;
         }
     }
 }
