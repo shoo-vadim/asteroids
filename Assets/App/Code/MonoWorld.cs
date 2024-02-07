@@ -8,14 +8,12 @@ using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using App.Code.View;
-using App.Code.View.Pool;
-using App.Code.View.UI.Dashboard;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace App.Code
 {
-    [RequireComponent(typeof(ViewPool))]
+    [RequireComponent(typeof(ViewElements))]
     public class MonoWorld : MonoBehaviour
     {
         private readonly GameSettings _settings = new(
@@ -23,14 +21,15 @@ namespace App.Code
                 180,
                 10,
                 new BulletSettings(2, 0.2f, 16),
-                new LaserSettings(5, 2f)),
+                new LaserSettings(20, 2f)),
             new AsteroidSettings(
                 new Range<float>(1, 5), 
                 new Range<float>(5, 10))
         );
 
         private ViewElements _view;
-        
+
+        private GameField _field;
         private ISpaceship _spaceship;
         private ILaser _laser;
         private ISpace _space;
@@ -39,38 +38,40 @@ namespace App.Code
 
         private void Start()
         {
-            if (!TryGetComponent<ViewPool>(out var pool))
+            if (!TryGetComponent(out _view))
             {
-                throw new InvalidOperationException($"Unable to find {typeof(ViewPool).FullName} component!");
-            }
-
-            if (GetComponentInChildren<SpaceshipUI>() is not { } spaceshipUI)
-            {
-                throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
-            }
-
-            if (GetComponentInChildren<LaserUI>() is not { } laserUI)
-            {
-                throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
+                throw new InvalidOperationException($"Unable to find {typeof(ViewElements).FullName} component!");
             }
             
-            var field = new GameField(30, 15);
+            _field = new GameField(30, 15);
             
             _spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
             _laser = new LaserModel(_settings.Spaceship.Laser);
-            _asteroids = new AsteroidModel(field, _settings.Asteroid);
-            _bullets = new BulletModel(field, _settings.Spaceship.Bullet, _asteroids as AsteroidModel);
+            _asteroids = new AsteroidModel(_field, _settings.Asteroid);
+            _bullets = new BulletModel(_field, _settings.Spaceship.Bullet, _asteroids as AsteroidModel);
             
-            _space = new SpaceModel(field, _settings, 
+            _space = new SpaceModel(
+                _field, 
+                _settings, 
                 _spaceship as Spaceship,
                 _laser as LaserModel,
                 _asteroids as AsteroidModel, 
                 _bullets as BulletModel);
             
             _space.GameOver += OnGameOver;
-            
-            _view = new ViewElements(pool, spaceshipUI, laserUI);
-            
+
+            BindView();
+
+            _space.Build(10);
+        }
+
+        private void OnDestroy()
+        {
+            DropView();
+        } 
+
+        private void BindView()
+        {
             _view.BindUI(_spaceship, _laser);
             _view.CreateSpaceship(_spaceship);
             
@@ -79,11 +80,9 @@ namespace App.Code
 
             _bullets.Create += _view.CreateBullet;
             _bullets.Remove += _view.RemoveBullet;
-
-            _space.Build(10);
         }
 
-        private void OnDestroy()
+        private void DropView()
         {
             _view.DropUI(_spaceship, _laser);
             _view.RemoveSpaceship(_spaceship);
@@ -121,7 +120,7 @@ namespace App.Code
             {
                 if (_space.TryApplyLaserShot(out var ray))
                 {
-                    Debug.Log($"SHOOT: {ray}");
+                    _view.CreateLaser(ray);
                 }
             }
 

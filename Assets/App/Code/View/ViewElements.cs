@@ -1,33 +1,43 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using App.Code.Model.Binding;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
 using App.Code.View.Custom;
 using App.Code.View.Pool;
+using App.Code.View.Tools;
 using App.Code.View.UI.Dashboard;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace App.Code.View
 {
-    public class ViewElements
+    public class ViewElements : MonoBehaviour
     {
-        private readonly ViewPool _pool;
-        private readonly LaserUI _laserUI;
-        private readonly SpaceshipUI _spaceshipUI;
+        [SerializeField] private LaserView _laserPrefab;
+        
+        private ViewPool _pool;
+        
+        private LaserUI _laserUI;
+        private SpaceshipUI _spaceshipUI;
         
         private readonly Dictionary<Asteroid, MonoView> _asteroids = new();
         private readonly Dictionary<Bullet, MonoView> _bullets = new();
         
         private SpaceshipView _spaceship;
 
-        public ViewElements(
-            ViewPool pool,
-            SpaceshipUI spaceshipUI,
-            LaserUI laserUI)
+        private void Awake()
         {
-            _pool = pool;
-            _laserUI = laserUI;
-            _spaceshipUI = spaceshipUI;
+            if (!TryGetComponent(out _pool))
+            {
+                throw new InvalidOperationException($"Unable to find {typeof(ViewPool).FullName} component!");
+            }
+
+            _spaceshipUI = GetComponentInChildren<SpaceshipUI>() 
+                           ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
+            
+            _laserUI = GetComponentInChildren<LaserUI>() 
+                       ?? throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
         }
 
         public void BindUI(ISpaceship spaceship, ILaser laser)
@@ -40,6 +50,12 @@ namespace App.Code.View
         {
             _spaceshipUI.Drop(spaceship);
             _laserUI.Drop(laser);
+        }
+
+        public void CreateLaser(Ray2D ray)
+        {
+            var laser = Instantiate(_laserPrefab);
+            laser.Setup(ray);
         }
 
         public void CreateSpaceship(ISpaceship spaceship)

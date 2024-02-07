@@ -407,6 +407,7 @@ GameObject:
   - component: {fileID: 803717220}
   - component: {fileID: 803717222}
   - component: {fileID: 803717223}
+  - component: {fileID: 803717224}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -461,6 +462,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5a511fe636442f8386400e461cc85e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &803717224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 803717219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dde2f9d2ef75462396753f7f2263bf00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _laserPrefab: {fileID: 9118464952218208008, guid: cc7a6a837308d6f4eb4e695b47347723, type: 3}
 --- !u!1001 &1057276850
 PrefabInstance:
   m_ObjectHideFlags: 0
