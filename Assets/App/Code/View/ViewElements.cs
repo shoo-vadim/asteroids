@@ -71,7 +71,7 @@ namespace App.Code.View
         {
             _spaceship.Drop(spaceship);
             var view = _spaceship.gameObject.GetComponent<MonoView>();
-            Object.Destroy(view);
+            Destroy(view);
             _pool.Release(view);
         }
 
@@ -90,7 +90,7 @@ namespace App.Code.View
             var view = _asteroids[asteroid];
             var positionable = view.gameObject.GetComponent<PositionableView>();
             positionable.Drop(asteroid);
-            Object.Destroy(positionable);
+            Destroy(positionable);
             _pool.Release(view);
             _asteroids.Remove(asteroid);
         }
@@ -107,7 +107,7 @@ namespace App.Code.View
             var view = _bullets[bullet];
             var positionable = view.gameObject.GetComponent<PositionableView>();
             positionable.Drop(bullet);
-            Object.Destroy(positionable);
+            Destroy(positionable);
             _pool.Release(view);
             _bullets.Remove(bullet);
         }
