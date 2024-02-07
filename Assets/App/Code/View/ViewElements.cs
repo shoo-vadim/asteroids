@@ -4,6 +4,7 @@ using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
 using App.Code.View.Custom;
 using App.Code.View.Pool;
+using App.Code.View.UI.Dashboard;
 using UnityEngine;
 
 namespace App.Code.View
@@ -11,14 +12,34 @@ namespace App.Code.View
     public class ViewElements
     {
         private readonly ViewPool _pool;
+        private readonly LaserUI _laserUI;
+        private readonly SpaceshipUI _spaceshipUI;
+        
         private readonly Dictionary<Asteroid, MonoView> _asteroids = new();
         private readonly Dictionary<Bullet, MonoView> _bullets = new();
         
         private SpaceshipView _spaceship;
 
-        public ViewElements(ViewPool pool)
+        public ViewElements(
+            ViewPool pool,
+            SpaceshipUI spaceshipUI,
+            LaserUI laserUI)
         {
             _pool = pool;
+            _laserUI = laserUI;
+            _spaceshipUI = spaceshipUI;
+        }
+
+        public void BindUI(ISpaceship spaceship, ILaser laser)
+        {
+            _spaceshipUI.Bind(spaceship);
+            _laserUI.Bind(laser);
+        }
+
+        public void DropUI(ISpaceship spaceship, ILaser laser)
+        {
+            _spaceshipUI.Drop(spaceship);
+            _laserUI.Drop(laser);
         }
 
         public void CreateSpaceship(ISpaceship spaceship)

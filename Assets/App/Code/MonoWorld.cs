@@ -9,6 +9,7 @@ using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using App.Code.View;
 using App.Code.View.Pool;
+using App.Code.View.UI.Dashboard;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -21,7 +22,7 @@ namespace App.Code
             new ShipSettings(
                 180,
                 10,
-                new BulletSettings(2, 0.5f, 16),
+                new BulletSettings(2, 0.2f, 16),
                 new LaserSettings(5, 2f)),
             new AsteroidSettings(
                 new Range<float>(1, 5), 
@@ -42,6 +43,16 @@ namespace App.Code
             {
                 throw new InvalidOperationException($"Unable to find {typeof(ViewPool).FullName} component!");
             }
+
+            if (GetComponentInChildren<SpaceshipUI>() is not { } spaceshipUI)
+            {
+                throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
+            }
+
+            if (GetComponentInChildren<LaserUI>() is not { } laserUI)
+            {
+                throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
+            }
             
             var field = new GameField(30, 15);
             
@@ -50,8 +61,7 @@ namespace App.Code
             _asteroids = new AsteroidModel(field, _settings.Asteroid);
             _bullets = new BulletModel(field, _settings.Spaceship.Bullet, _asteroids as AsteroidModel);
             
-            _space = new SpaceModel(field, 
-                _settings, 
+            _space = new SpaceModel(field, _settings, 
                 _spaceship as Spaceship,
                 _laser as LaserModel,
                 _asteroids as AsteroidModel, 
@@ -59,8 +69,9 @@ namespace App.Code
             
             _space.GameOver += OnGameOver;
             
-            _view = new ViewElements(pool);
+            _view = new ViewElements(pool, spaceshipUI, laserUI);
             
+            _view.BindUI(_spaceship, _laser);
             _view.CreateSpaceship(_spaceship);
             
             _asteroids.Create += _view.CreateAsteroid;
@@ -74,6 +85,7 @@ namespace App.Code
 
         private void OnDestroy()
         {
+            _view.DropUI(_spaceship, _laser);
             _view.RemoveSpaceship(_spaceship);
             
             _asteroids.Create -= _view.CreateAsteroid;
