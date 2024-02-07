@@ -1,13 +1,15 @@
 ﻿using System;
-using App.Code.Model.Binding.Interfaces;
+using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using UnityEngine;
 
 namespace App.Code.Model.Entities.Base
 {
-    public class Element : IElement
+    public class Element : IPositionable
     {
         public event Action Update;
+
+        public event Action<Vector2> PositionChange;
         
         public Vector2 Position { get; private set; }
         

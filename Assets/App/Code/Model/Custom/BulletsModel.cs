@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Entities;
+using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using UnityEngine;
 
 namespace App.Code.Model.Custom
 {
-    public class BulletsModel : IElementSource
+    public class BulletsModel : ISource<Bullet>
     {
-        public event Action<IElement> ElementCreate;
-        public event Action<IElement> ElementRemove;
+        public event Action<Bullet> Create;
+        public event Action<Bullet> Remove;
         
         private readonly GameField _field;
         private readonly BulletSettings _settings;
@@ -29,16 +29,20 @@ namespace App.Code.Model.Custom
             _asteroids = asteroids;
         }
 
-        public void Create(Vector2 position, Vector2 direction)
+        public bool TryApplyShot(Vector2 position, Vector2 direction)
         {
             if (_timerReload < 0)
             {
                 var bullet = new Bullet(position, direction, _settings.Lifetime);
                 _bullets.Add(bullet);
-                ElementCreate?.Invoke(bullet);
+                Create?.Invoke(bullet);
                 
                 _timerReload = _settings.Reload;
+
+                return true;
             }
+
+            return false;
         }
 
         private void UpdateMovement(float deltaTime)
@@ -60,13 +64,13 @@ namespace App.Code.Model.Custom
                     if (_asteroids.ApplyBullet(bullet.Position))
                     {
                         _bullets.RemoveAt(b);
-                        ElementRemove?.Invoke(bullet);
+                        Remove?.Invoke(bullet);
                     }
                 }
                 else
                 {
                     _bullets.RemoveAt(b);
-                    ElementRemove?.Invoke(bullet);
+                    Remove?.Invoke(bullet);
                 }
             }
         }

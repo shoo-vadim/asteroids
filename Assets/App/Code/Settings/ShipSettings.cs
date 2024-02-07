@@ -14,13 +14,16 @@ namespace App.Code.Settings
         
         public BulletSettings Bullet { get; }
         
-        public ShipSettings(Vector2 position, Vector2 direction, float rotation, float thrust, BulletSettings bullet)
+        public LaserSettings Laser { get; }
+        
+        public ShipSettings(Vector2 position, Vector2 direction, float rotation, float thrust, BulletSettings bullet, LaserSettings laser)
         {
             Position = position;
             Direction = direction;
             Rotation = rotation;
             Thrust = thrust;
             Bullet = bullet;
+            Laser = laser;
         }
     }
 }

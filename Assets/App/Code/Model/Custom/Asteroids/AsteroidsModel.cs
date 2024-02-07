@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using App.Code.Model.Binding.Interfaces;
 using App.Code.Model.Entities;
 using App.Code.Model.Entities.Base;
+using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical;
 using App.Code.Model.Logical.Extensions;
 using App.Code.Model.Logical.Field;
@@ -12,11 +11,11 @@ using UnityEngine;
 
 namespace App.Code.Model.Custom.Asteroids
 {
-    public class AsteroidsModel : IElementSource
+    public class AsteroidsModel : ISource<Asteroid>
     {
-        public event Action<IElement> ElementCreate;
-        public event Action<IElement> ElementRemove;
-
+        public event Action<Asteroid> Create;
+        public event Action<Asteroid> Remove;
+        
         private readonly GameField _field;
         private readonly AsteroidsSettings _settings;
         private readonly AsteroidsBuilder _builder;
@@ -35,7 +34,7 @@ namespace App.Code.Model.Custom.Asteroids
         private void AddAndNotify(Asteroid asteroid)
         {
             _asteroids.Add(asteroid);
-            ElementCreate?.Invoke(asteroid);
+            Create?.Invoke(asteroid);
         }
 
         public void Build(int count)
@@ -56,7 +55,7 @@ namespace App.Code.Model.Custom.Asteroids
                 if (asteroid.HasIntersectionWithPoint(position))
                 {
                     _asteroids.RemoveAt(a);
-                    ElementRemove?.Invoke(asteroid);
+                    Remove?.Invoke(asteroid);
 
                     if (!asteroid.IsFragment)
                     {
