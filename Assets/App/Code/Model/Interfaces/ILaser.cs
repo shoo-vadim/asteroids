@@ -1,10 +1,8 @@
-﻿using System;
+﻿using App.Code.Model.Interfaces.Base;
 
 namespace App.Code.Model.Interfaces
 {
-    public interface ILaser
+    public interface ILaser : IReloadable, IAmountable
     {
-        public event Action<float> ReloadChange;
-        public event Action<int> AmountChange;
     }
 }

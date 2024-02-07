@@ -47,6 +47,30 @@ namespace App.Code.Model.Custom.Asteroids
             }
         }
 
+        private void Break(Asteroid asteroid)
+        {
+            _asteroids.Remove(asteroid);
+            Remove?.Invoke(asteroid);
+
+            if (!asteroid.IsFragment)
+            {
+                AddAndNotify(asteroid.CreateFragment(2));
+                AddAndNotify(asteroid.CreateFragment(2));
+            }
+        }
+
+        public void ApplyLaser(Ray2D ray)
+        {
+            for (var a = _asteroids.Count - 1; a >= 0; a--)
+            {
+                var asteroid = _asteroids[a];
+                if (asteroid.HasIntersectionWithRay(ray))
+                {
+                    Break(asteroid);
+                }
+            }            
+        }
+
         public bool ApplyBullet(Vector2 position)
         {
             for (var a = _asteroids.Count - 1; a >= 0; a--)
@@ -54,15 +78,7 @@ namespace App.Code.Model.Custom.Asteroids
                 var asteroid = _asteroids[a];
                 if (asteroid.HasIntersectionWithPoint(position))
                 {
-                    _asteroids.RemoveAt(a);
-                    Remove?.Invoke(asteroid);
-
-                    if (!asteroid.IsFragment)
-                    {
-                        AddAndNotify(asteroid.CreateFragment(2));
-                        AddAndNotify(asteroid.CreateFragment(2));
-                    }
-
+                    Break(asteroid);
                     return true;
                 }
             }

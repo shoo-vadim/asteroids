@@ -8,34 +8,36 @@ namespace App.Code.Model.Custom
     {
         public event Action<float> ReloadChange;
         public event Action<int> AmountChange;
+        
+        public float Reload { get; private set; }
 
-        public bool CanApplyShot => _currentReload <= 0 && _currentAmount > 0;
+        public int Amount { get; private set; }
 
-        private readonly float _reload;
-        private float _currentReload;
-        private int _currentAmount;
+        public bool CanApplyShot => Reload <= 0 && Amount > 0;
+
+        private readonly float _reloadFull;
 
         public LaserModel(LaserSettings settings)
         {
-            _reload = settings.Reload;
-            _currentAmount = settings.Amount;
+            _reloadFull = settings.Reload;
+            Amount = settings.Amount;
         }
 
         public void ApplyShot()
         {
-            _currentReload = _reload;
-            ReloadChange?.Invoke(_currentReload);
+            Reload = _reloadFull;
+            ReloadChange?.Invoke(Reload);
 
-            _currentAmount--;
-            AmountChange?.Invoke(_currentAmount);
+            Amount--;
+            AmountChange?.Invoke(Amount);
         }
 
         public void Update(float delta)
         {
-            if (_currentReload > 0)
+            if (Reload > 0)
             {
-                _currentReload -= delta;
-                ReloadChange?.Invoke(_currentReload);
+                Reload -= delta;
+                ReloadChange?.Invoke(Reload);
             }
         }
     }

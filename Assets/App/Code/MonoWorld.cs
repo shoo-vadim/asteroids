@@ -121,7 +121,7 @@ namespace App.Code
             {
                 if (_space.TryApplyLaserShot(out var ray))
                 {
-                    Debug.DrawRay(ray.origin, ray.direction);
+                    Debug.Log($"SHOOT: {ray}");
                 }
             }
 

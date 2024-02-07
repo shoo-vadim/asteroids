@@ -11,6 +11,8 @@ namespace App.Code.View.UI.Dashboard
         
         public void Bind(ILaser bind)
         {
+            _indicatorAmount.Refresh(bind.Amount);
+            _indicatorReload.Refresh(FormatReload(bind.Reload));
             bind.AmountChange += OnAmountChange;
             bind.ReloadChange += OnReloadChange;
         }
@@ -22,9 +24,11 @@ namespace App.Code.View.UI.Dashboard
         }
         
         private void OnAmountChange(int amount) => 
-            _indicatorAmount.Refresh(amount.ToString());
+            _indicatorAmount.Refresh(amount);
 
         private void OnReloadChange(float reload) => 
-            _indicatorReload.Refresh(reload.ToString("00.00"));
+            _indicatorReload.Refresh(FormatReload(reload));
+
+        private static string FormatReload(float reload) => reload.ToString("00.00");
     }
 }

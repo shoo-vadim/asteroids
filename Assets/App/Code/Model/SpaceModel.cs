@@ -3,7 +3,6 @@ using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
-using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using UnityEngine;
@@ -13,11 +12,6 @@ namespace App.Code.Model
     public class SpaceModel : ISpace
     {
         public event Action GameOver;
-
-        // public ISource<Asteroid> Asteroids => _asteroids;
-        public ISource<Bullet> Bullets => _bullets;
-        // public ISpaceship Spaceship => _spaceship;
-        public ILaser Laser => _laser;
 
         private readonly GameField _field;
         private readonly GameSettings _settings;
@@ -51,19 +45,19 @@ namespace App.Code.Model
         public bool TryApplyBulletShot()
         {
             return _bullets.TryApplyShot(
-                _spaceship.Position + _spaceship.Direction, 
+                _spaceship.ShootingPoint, 
                 _spaceship.Direction * _settings.Spaceship.Bullet.Speed);
         }
 
-        public bool TryApplyLaserShot(out Ray ray)
+        public bool TryApplyLaserShot(out Ray2D ray)
         {
             if (!_laser.CanApplyShot)
             {
                 ray = default;
                 return false;
             }
-
-            ray = default;
+            
+            _asteroids.ApplyLaser(ray = new Ray2D(_spaceship.ShootingPoint, _spaceship.Direction));
             _laser.ApplyShot();
             return true;
         }
@@ -74,6 +68,7 @@ namespace App.Code.Model
             
             _asteroids.Update(deltaTime);
             _bullets.Update(deltaTime);
+            _laser.Update(deltaTime);
 
             if (_asteroids.HasAnyIntersection(_spaceship))
             {
