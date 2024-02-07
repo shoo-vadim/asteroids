@@ -33,11 +33,13 @@ namespace App.Code.View
                 throw new InvalidOperationException($"Unable to find {typeof(ViewPool).FullName} component!");
             }
 
-            _spaceshipUI = GetComponentInChildren<SpaceshipUI>() 
-                           ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
+            _spaceshipUI = 
+                GetComponentInChildren<SpaceshipUI>() 
+                ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
             
-            _laserUI = GetComponentInChildren<LaserUI>() 
-                       ?? throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
+            _laserUI = 
+                GetComponentInChildren<LaserUI>() 
+                ?? throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
         }
 
         public void BindUI(ISpaceship spaceship, ILaser laser)
