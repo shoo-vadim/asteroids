@@ -1,6 +1,7 @@
 ﻿using System;
 using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
+using App.Code.Model.Custom.Bullets;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
 using App.Code.Model.Logical.Field;
@@ -18,7 +19,8 @@ namespace App.Code.Model
         
         private readonly LaserModel _laser;
         private readonly Spaceship _spaceship;
-        private readonly BulletModel _bullets;
+        private readonly EnemyModel _enemy;
+        private readonly PlayerBulletModel _bullets;
         private readonly AsteroidModel _asteroids;
 
         public SpaceModel(
@@ -27,11 +29,13 @@ namespace App.Code.Model
             Spaceship spaceship, 
             LaserModel laser, 
             AsteroidModel asteroids,
-            BulletModel bullets)
+            PlayerBulletModel bullets,
+            EnemyModel enemy)
         {
             _field = field;
             _settings = settings;
             _spaceship = spaceship;
+            _enemy = enemy;
             _laser = laser;
             _asteroids = asteroids;
             _bullets = bullets;
@@ -69,6 +73,7 @@ namespace App.Code.Model
             _asteroids.Update(deltaTime);
             _bullets.Update(deltaTime);
             _laser.Update(deltaTime);
+            _enemy.Update(deltaTime);
 
             if (_asteroids.HasAnyIntersection(_spaceship))
             {

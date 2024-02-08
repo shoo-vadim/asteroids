@@ -2,6 +2,7 @@
 using App.Code.Model;
 using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
+using App.Code.Model.Custom.Bullets;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
 using App.Code.Model.Interfaces.Base;
@@ -28,13 +29,14 @@ namespace App.Code
         );
 
         private ViewElements _view;
-
+        
         private GameField _field;
+
         private ISpaceship _spaceship;
         private ILaser _laser;
         private ISpace _space;
         private ISource<Asteroid> _asteroids;
-        private ISource<Bullet> _bullets;
+        private (ISource<Bullet> player, ISource<Bullet> enemy) _bullets;
 
         private void Start()
         {
@@ -45,21 +47,25 @@ namespace App.Code
             
             _field = new GameField(30, 15);
             
-            _spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
-            _laser = new LaserModel(_settings.Spaceship.Laser);
-            _asteroids = new AsteroidModel(_field, _settings.Asteroid);
-            _bullets = new BulletModel(_field, _settings.Spaceship.Bullet, _asteroids as AsteroidModel);
+            var spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
+            var laser = new LaserModel(_settings.Spaceship.Laser);
+            var asteroids = new AsteroidModel(_field, _settings.Asteroid);
+            var bullets = (
+                player: new PlayerBulletModel(_field, _settings.Spaceship.Bullet, asteroids),
+                enemy: new EnemyBulletModel(_field, spaceship));
+            var enemy = new EnemyModel(bullets.enemy);
             
-            _space = new SpaceModel(
-                _field, 
-                _settings, 
-                _spaceship as Spaceship,
-                _laser as LaserModel,
-                _asteroids as AsteroidModel, 
-                _bullets as BulletModel);
+            var space = new SpaceModel(_field, _settings, spaceship, laser, asteroids, bullets.player, enemy);
             
-            _space.GameOver += OnGameOver;
+            space.GameOver += OnGameOver;
+            bullets.enemy.GameOver += OnGameOver;
 
+            _spaceship = spaceship;
+            _laser = laser;
+            _space = space;
+            _asteroids = asteroids;
+            _bullets = (bullets.player, bullets.enemy);
+            
             BindView();
 
             _space.Build(10);
@@ -78,8 +84,10 @@ namespace App.Code
             _asteroids.Create += _view.CreateAsteroid;
             _asteroids.Remove += _view.RemoveAsteroid;
 
-            _bullets.Create += _view.CreateBullet;
-            _bullets.Remove += _view.RemoveBullet;
+            _bullets.player.Create += _view.CreateBullet;
+            _bullets.player.Remove += _view.RemoveBullet;
+            _bullets.enemy.Create += _view.CreateBullet;
+            _bullets.enemy.Remove += _view.RemoveBullet;
         }
 
         private void DropView()
@@ -90,8 +98,10 @@ namespace App.Code
             _asteroids.Create -= _view.CreateAsteroid;
             _asteroids.Remove -= _view.RemoveAsteroid;
             
-            _bullets.Create -= _view.CreateBullet;
-            _bullets.Remove -= _view.RemoveBullet;
+            _bullets.player.Create -= _view.CreateBullet;
+            _bullets.player.Remove -= _view.RemoveBullet;
+            _bullets.enemy.Create -= _view.CreateBullet;
+            _bullets.enemy.Remove -= _view.RemoveBullet;
         }
 
         private void HandleInput()
@@ -116,7 +126,7 @@ namespace App.Code
                 _spaceship.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
             }
 
-            if (Keyboard.current.shiftKey.wasPressedThisFrame)
+            if (Keyboard.current.ctrlKey.wasPressedThisFrame)
             {
                 if (_space.TryApplyLaserShot(out var ray))
                 {
