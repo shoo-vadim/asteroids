@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using App.Code.Model.Entities;
 using App.Code.Model.Entities.Base;
 using App.Code.Model.Interfaces.Base;
-using App.Code.Model.Logical;
 using App.Code.Model.Logical.Extensions;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
@@ -20,31 +19,26 @@ namespace App.Code.Model.Custom.Asteroids
         private readonly AsteroidSettings _settings;
         private readonly AsteroidBuilder _builder;
 
-        private readonly List<Asteroid> _asteroids = new();
+        private readonly List<Asteroid> _asteroids;
 
         private float _timerSpawn;
 
-        public AsteroidModel(GameField field, AsteroidSettings settings)
+        public AsteroidModel(GameField field,
+            AsteroidSettings settings, 
+            AsteroidBuilder builder, 
+            IEnumerable<Asteroid> asteroids)
         {
             _field = field;
             _settings = settings;
-            _builder = new AsteroidBuilder(field, settings.Speed);
+            _builder = builder;
+            _asteroids = new List<Asteroid>(asteroids);
+            _timerSpawn = settings.Spawn.GetRandom();
         }
         
         private void AddAndNotify(Asteroid asteroid)
         {
             _asteroids.Add(asteroid);
             Create?.Invoke(asteroid);
-        }
-
-        public void Build(int count)
-        {
-            _timerSpawn = _settings.Spawn.GetRandom();
-
-            foreach (var asteroid in _builder.BuildCollection(count))
-            {
-                AddAndNotify(asteroid);
-            }
         }
 
         private void Break(Asteroid asteroid)

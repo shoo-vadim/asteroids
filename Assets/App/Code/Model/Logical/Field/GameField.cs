@@ -19,6 +19,13 @@ namespace App.Code.Model.Logical.Field
             _x = x;
             _y = y;
         }
+        
+        public Vector2 GetRandomPosition()
+        {
+            return new Vector2(
+                Random.Range(_x.Min, _x.Max), 
+                Random.Range(_y.Min, _y.Max));
+        }
 
         public Vector2 GetRandomPositionOnBorder()
         {

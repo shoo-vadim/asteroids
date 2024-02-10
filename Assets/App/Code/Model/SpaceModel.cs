@@ -41,11 +41,6 @@ namespace App.Code.Model
             _bullets = bullets;
         }
         
-        public void Build(int asteroidsCount)
-        {
-            _asteroids.Build(asteroidsCount);
-        }
-
         public bool TryApplyBulletShot()
         {
             return _bullets.TryApplyShot(

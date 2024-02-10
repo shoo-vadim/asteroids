@@ -1,20 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical.Extensions;
-using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-namespace App.Code.Model.Logical
+namespace App.Code.Model.Custom.Asteroids
 {
     public class AsteroidBuilder
     {
-        private readonly GameField _field;
+        private readonly Func<Vector2> _factoryPosition;
         private readonly Range<float> _speed;
         
-        public AsteroidBuilder(GameField field, Range<float> speed)
+        public AsteroidBuilder(Func<Vector2> factoryPosition, Range<float> speed)
         {
-            _field = field;
+            _factoryPosition = factoryPosition;
             _speed = speed;
         }
 
@@ -24,7 +25,7 @@ namespace App.Code.Model.Logical
         public Asteroid BuildSingle()
         {
             return new Asteroid(
-                _field.GetRandomPositionOnBorder(),
+                _factoryPosition.Invoke(),
                 GetRandomMovement(),
                 1f,
                 false

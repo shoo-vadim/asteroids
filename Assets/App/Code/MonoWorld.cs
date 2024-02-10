@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using App.Code.Model;
 using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
@@ -49,7 +50,9 @@ namespace App.Code
             
             var spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
             var laser = new LaserModel(_settings.Spaceship.Laser);
-            var asteroids = new AsteroidModel(_field, _settings.Asteroid);
+            var builder = new AsteroidBuilder(_field.GetRandomPositionOnBorder, _settings.Asteroid.Speed);
+            var asteroidCollection = builder.BuildCollection(10).ToArray(); 
+            var asteroids = new AsteroidModel(_field, _settings.Asteroid, builder, asteroidCollection);
             var bullets = (
                 player: new PlayerBulletModel(_field, _settings.Spaceship.Bullet, asteroids),
                 enemy: new EnemyBulletModel(_field, spaceship));
@@ -65,10 +68,12 @@ namespace App.Code
             _space = space;
             _asteroids = asteroids;
             _bullets = (bullets.player, bullets.enemy);
-            
-            BindView();
 
-            _space.Build(10);
+            foreach (var asteroid in asteroidCollection)
+            {
+                _view.CreateAsteroid(asteroid);
+            }
+            BindView();
         }
 
         private void OnDestroy()
