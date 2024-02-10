@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5912312901864217391, guid: 0a38882e1a2321346a83a5d13ed7c6dd, type: 3}
       propertyPath: m_Name
-      value: View Variant
+      value: Aliens
       objectReference: {fileID: 0}
     - target: {fileID: 6624220227690717680, guid: 0a38882e1a2321346a83a5d13ed7c6dd, type: 3}
       propertyPath: m_Positions.Array.size

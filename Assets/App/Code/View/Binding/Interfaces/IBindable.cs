@@ -1,4 +1,4 @@
-﻿namespace App.Code.View.Interfaces
+﻿namespace App.Code.View.Binding.Interfaces
 {
     public interface IBindable<in TBind>
     {

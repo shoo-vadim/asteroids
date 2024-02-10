@@ -1,5 +1,5 @@
 ﻿using App.Code.Model.Interfaces;
-using App.Code.View.Interfaces;
+using App.Code.View.Binding.Interfaces;
 using UnityEngine;
 
 namespace App.Code.View.UI.Dashboard

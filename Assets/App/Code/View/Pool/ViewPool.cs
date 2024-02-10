@@ -6,7 +6,7 @@ namespace App.Code.View.Pool
 {
     public class ViewPool : MonoBehaviour
     {
-        [SerializeField] private MonoView[] _views;
+        [SerializeField] private ViewPreset _preset;
 
         private ViewRoot _root;
 
@@ -20,7 +20,7 @@ namespace App.Code.View.Pool
 
         public MonoView Obtain(ElementType elementType, Vector2 position)
         {
-            var prefab = _views.Single(v => v.ElementType == elementType);
+            var prefab = _preset.Views.Single(v => v.ElementType == elementType);
 
             if (!prefab)
             {

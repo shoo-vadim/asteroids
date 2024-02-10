@@ -9,15 +9,18 @@ using App.Code.Model.Interfaces;
 using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
-using App.Code.View;
+using App.Code.View.Elements;
+using App.Code.World.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace App.Code
+namespace App.Code.World
 {
-    [RequireComponent(typeof(ViewElements))]
-    public class MonoWorld : MonoBehaviour
+    [RequireComponent(typeof(GameElements))]
+    public class GameWorld : MonoWorld<GameElements>
     {
+        public event Action GameOver;
+        
         private readonly GameSettings _settings = new(
             new ShipSettings(
                 180,
@@ -29,8 +32,6 @@ namespace App.Code
                 new Range<float>(5, 10))
         );
 
-        private ViewElements _view;
-        
         private GameField _field;
 
         private ISpaceship _spaceship;
@@ -41,12 +42,7 @@ namespace App.Code
 
         private void Start()
         {
-            if (!TryGetComponent(out _view))
-            {
-                throw new InvalidOperationException($"Unable to find {typeof(ViewElements).FullName} component!");
-            }
-
-            _field = CreateGameFieldFromCamera(GetComponentInChildren<Camera>());
+            _field = CreateGameFieldFromCamera();
             
             var spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
             var laser = new LaserModel(_settings.Spaceship.Laser);
@@ -71,7 +67,7 @@ namespace App.Code
 
             foreach (var asteroid in asteroidCollection)
             {
-                _view.CreateAsteroid(asteroid);
+                View.CreateAsteroid(asteroid);
             }
             BindView();
         }
@@ -83,40 +79,30 @@ namespace App.Code
 
         private void BindView()
         {
-            _view.BindUI(_spaceship, _laser);
-            _view.CreateSpaceship(_spaceship);
+            View.BindUI(_spaceship, _laser);
+            View.CreateSpaceship(_spaceship);
             
-            _asteroids.Create += _view.CreateAsteroid;
-            _asteroids.Remove += _view.RemoveAsteroid;
+            _asteroids.Create += View.CreateAsteroid;
+            _asteroids.Remove += View.RemoveAsteroid;
 
-            _bullets.player.Create += _view.CreateBullet;
-            _bullets.player.Remove += _view.RemoveBullet;
-            _bullets.enemy.Create += _view.CreateBullet;
-            _bullets.enemy.Remove += _view.RemoveBullet;
+            _bullets.player.Create += View.CreateBullet;
+            _bullets.player.Remove += View.RemoveBullet;
+            _bullets.enemy.Create += View.CreateBullet;
+            _bullets.enemy.Remove += View.RemoveBullet;
         }
 
         private void DropView()
         {
-            _view.DropUI(_spaceship, _laser);
-            _view.RemoveSpaceship(_spaceship);
+            View.DropUI(_spaceship, _laser);
+            View.RemoveSpaceship(_spaceship);
             
-            _asteroids.Create -= _view.CreateAsteroid;
-            _asteroids.Remove -= _view.RemoveAsteroid;
+            _asteroids.Create -= View.CreateAsteroid;
+            _asteroids.Remove -= View.RemoveAsteroid;
             
-            _bullets.player.Create -= _view.CreateBullet;
-            _bullets.player.Remove -= _view.RemoveBullet;
-            _bullets.enemy.Create -= _view.CreateBullet;
-            _bullets.enemy.Remove -= _view.RemoveBullet;
-        }
-
-        private static GameField CreateGameFieldFromCamera(Camera camera)
-        {
-            if (camera is not { orthographicSize: var size})
-            {
-                throw new InvalidOperationException("Camera is not found");
-            }
-
-            return new GameField(size * camera.aspect, size);
+            _bullets.player.Create -= View.CreateBullet;
+            _bullets.player.Remove -= View.RemoveBullet;
+            _bullets.enemy.Create -= View.CreateBullet;
+            _bullets.enemy.Remove -= View.RemoveBullet;
         }
 
         private void HandleInput()
@@ -145,7 +131,7 @@ namespace App.Code
             {
                 if (_space.TryApplyLaserShot(out var ray))
                 {
-                    _view.CreateLaser(ray);
+                    View.CreateLaser(ray);
                 }
             }
 
@@ -165,9 +151,6 @@ namespace App.Code
             _space.Update(Time.deltaTime);
         }
 
-        private void OnGameOver()
-        {
-            Debug.Log("GameOver");
-        }
+        private void OnGameOver() => GameOver?.Invoke();
     }
 }
