@@ -44,8 +44,8 @@ namespace App.Code
             {
                 throw new InvalidOperationException($"Unable to find {typeof(ViewElements).FullName} component!");
             }
-            
-            _field = new GameField(30, 15);
+
+            _field = CreateGameFieldFromCamera(GetComponentInChildren<Camera>());
             
             var spaceship = new Spaceship(Vector2.zero, Vector2.up, Vector2.zero, 1f);
             var laser = new LaserModel(_settings.Spaceship.Laser);
@@ -102,6 +102,16 @@ namespace App.Code
             _bullets.player.Remove -= _view.RemoveBullet;
             _bullets.enemy.Create -= _view.CreateBullet;
             _bullets.enemy.Remove -= _view.RemoveBullet;
+        }
+
+        private static GameField CreateGameFieldFromCamera(Camera camera)
+        {
+            if (camera is not { orthographicSize: var size})
+            {
+                throw new InvalidOperationException("Camera is not found");
+            }
+
+            return new GameField(size * camera.aspect, size);
         }
 
         private void HandleInput()
