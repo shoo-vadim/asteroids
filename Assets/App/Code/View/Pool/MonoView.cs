@@ -1,4 +1,4 @@
-﻿using App.Code.Model.Binding;
+﻿using App.Code.View.Pool;
 using UnityEngine;
 
 namespace App.Code.View

@@ -1,4 +1,4 @@
-﻿namespace App.Code.Model.Binding
+﻿namespace App.Code.View.Pool
 {
     public enum ElementType
     {

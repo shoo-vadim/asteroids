@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using App.Code.Model.Binding;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
+using App.Code.Model.Interfaces.Base;
+using App.Code.Model.Logical.Extensions;
+using App.Code.View.Binding;
+using App.Code.View.Binding.Custom;
 using App.Code.View.Custom;
 using App.Code.View.Pool;
 using App.Code.View.Tools;
@@ -20,8 +23,8 @@ namespace App.Code.View
         private LaserUI _laserUI;
         private SpaceshipUI _spaceshipUI;
         
-        private readonly Dictionary<Asteroid, MonoView> _asteroids = new();
-        private readonly Dictionary<Bullet, MonoView> _bullets = new();
+        private readonly Dictionary<Asteroid, PositionableView<Asteroid>> _asteroids = new();
+        private readonly Dictionary<Bullet, PositionableView<Bullet>> _bullets = new();
         
         private SpaceshipView _spaceship;
 
@@ -61,54 +64,53 @@ namespace App.Code.View
 
         public void CreateSpaceship(ISpaceship spaceship)
         {
-            var view = _pool.Obtain(ElementType.Spaceship, spaceship.Position);
-            _spaceship = view.gameObject.AddComponent<SpaceshipView>();
-            _spaceship.Bind(spaceship);
+            _spaceship = ObtainElement<SpaceshipView, ISpaceship>(ElementType.Spaceship, spaceship);
         }
 
         public void RemoveSpaceship(ISpaceship spaceship)
         {
-            _spaceship.Drop(spaceship);
-            var view = _spaceship.gameObject.GetComponent<MonoView>();
-            Destroy(view);
-            _pool.Release(view);
+            ReleaseElement(_spaceship, spaceship);
         }
 
         public void CreateAsteroid(Asteroid asteroid)
         {
-            var view = _pool.Obtain(
-                asteroid.IsFragment ? ElementType.Fragment : ElementType.Asteroid, 
-                asteroid.Position);
-            
-            view.gameObject.AddComponent<PositionableView>().Bind(asteroid);
-            _asteroids.Add(asteroid, view);
+            _asteroids.Add(asteroid, ObtainElement<AsteroidView, Asteroid>(
+                asteroid.IsFragment ? ElementType.Fragment : ElementType.Asteroid, asteroid));
         }
 
         public void RemoveAsteroid(Asteroid asteroid)
         {
-            var view = _asteroids[asteroid];
-            var positionable = view.gameObject.GetComponent<PositionableView>();
-            positionable.Drop(asteroid);
-            Destroy(positionable);
-            _pool.Release(view);
-            _asteroids.Remove(asteroid);
+            ReleaseElement(_asteroids.GetAndRemove(asteroid), asteroid);
         }
 
         public void CreateBullet(Bullet bullet)
         {
-            var view = _pool.Obtain(ElementType.Bullet, bullet.Position);
-            view.gameObject.AddComponent<PositionableView>().Bind(bullet);
-            _bullets.Add(bullet, view);
+            _bullets.Add(bullet, ObtainElement<BulletView, Bullet>(ElementType.Bullet, bullet));
         }
 
         public void RemoveBullet(Bullet bullet)
         {
-            var view = _bullets[bullet];
-            var positionable = view.gameObject.GetComponent<PositionableView>();
-            positionable.Drop(bullet);
-            Destroy(positionable);
-            _pool.Release(view);
-            _bullets.Remove(bullet);
+            ReleaseElement(_bullets.GetAndRemove(bullet), bullet);
+        }
+
+        private TBind ObtainElement<TBind, TModel>(ElementType elementType, TModel model) 
+            where TBind : BindableView<TModel>
+            where TModel : IPositionable
+        {
+            var view = _pool.Obtain(elementType, model.Position);
+            var bind = view.gameObject.AddComponent<TBind>();
+            bind.Bind(model);
+            return bind;
+        }
+
+        private void ReleaseElement<TBind, TModel>(TBind bind, TModel model)
+            where TBind : BindableView<TModel>
+            where TModel : IPositionable
+        {
+            bind.Drop(model);
+            var view = bind.gameObject.GetComponent<TBind>();
+            Destroy(bind);
+            _pool.Release(view.GetComponent<MonoView>());
         }
     }
 }
