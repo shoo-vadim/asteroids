@@ -108,9 +108,8 @@ namespace App.Code.View
             where TModel : IPositionable
         {
             bind.Drop(model);
-            var view = bind.gameObject.GetComponent<TBind>();
             Destroy(bind);
-            _pool.Release(view.GetComponent<MonoView>());
+            _pool.Release(bind.GetComponent<MonoView>());
         }
     }
 }
