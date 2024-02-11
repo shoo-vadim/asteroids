@@ -20,6 +20,7 @@ namespace App.Code.View.Elements
         public GameUI UI { get; private set; }
         
         private readonly Dictionary<Bullet, PositionableView<Bullet>> _bullets = new();
+        private readonly Dictionary<Enemy, PositionableView<Enemy>> _enemies = new();
         
         private SpaceshipView _spaceship;
 
@@ -68,7 +69,15 @@ namespace App.Code.View.Elements
         {
             ReleaseElement(_bullets.GetAndRemove(bullet), bullet);
         }
+        
+        public void CreateEnemy(Enemy enemy)
+        {
+            _enemies.Add(enemy, ObtainElement<EnemyView, Enemy>(ElementType.Aliens, enemy));
+        }
 
-
+        public void RemoveEnemy(Enemy enemy)
+        {
+            ReleaseElement(_enemies.GetAndRemove(enemy), enemy);
+        }
     }
 }

@@ -1061,6 +1061,16 @@ MonoBehaviour:
       <Spawn>k__BackingField:
         <Min>k__BackingField: 5
         <Max>k__BackingField: 10
+    <Enemy>k__BackingField:
+      <Speed>k__BackingField: 3
+      <Radius>k__BackingField: 1
+      <Spawn>k__BackingField:
+        <Min>k__BackingField: 1
+        <Max>k__BackingField: 1
+      <Bullet>k__BackingField:
+        <Lifetime>k__BackingField: 2
+        <Reload>k__BackingField: 1
+        <Speed>k__BackingField: 16
 --- !u!1001 &8167734341170896477
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ namespace App.Code.World
         private ILaser _laser;
         private ISpace _space;
         private ISource<Asteroid> _asteroids;
+        private ISource<Enemy> _enemies;
         private (ISource<Bullet> player, ISource<Bullet> enemy) _bullets;
         private IPointable[] _pointables;
 
@@ -47,17 +48,18 @@ namespace App.Code.World
             var asteroidCollection = builder.BuildCollection(10).ToArray(); 
             var asteroids = new AsteroidModel(_field, _settings.Asteroid, builder, asteroidCollection, spaceshipModel);
             var bulletsEnemy = new EnemyBulletModel(_field, spaceshipModel);
-            var enemy = new EnemyModel(_field, bulletsEnemy, spaceshipModel, _settings.Enemy);
-            var bulletsPlayer = new PlayerBulletModel(_field, _settings.Spaceship.Bullet, asteroids, enemy);
+            var enemies = new EnemyModel(_field, bulletsEnemy, spaceshipModel, _settings.Enemy);
+            var bulletsPlayer = new PlayerBulletModel(_field, _settings.Spaceship.Bullet, asteroids, enemies);
 
-            var space = new SpaceModel(_settings, spaceshipModel, laser, asteroids, bulletsPlayer, enemy);
+            var space = new SpaceModel(_settings, spaceshipModel, laser, asteroids, bulletsPlayer, enemies);
 
             _spaceship = spaceshipModel;
+            _enemies = enemies;
             _laser = laser;
             _space = space;
             _asteroids = asteroids;
             _bullets = (bulletsPlayer, bulletsEnemy);
-            _pointables = new IPointable[] { asteroids, enemy };
+            _pointables = new IPointable[] { asteroids, enemies };
 
             BindLogic();
             BuildView(asteroidCollection, spaceship);
@@ -98,6 +100,8 @@ namespace App.Code.World
             View.UI.Restart += OnRestart;
             _spaceship.Create += CreateSpaceship;
             _spaceship.Remove += RemoveSpaceship;
+            _enemies.Create += View.CreateEnemy;
+            _enemies.Remove += View.RemoveEnemy;
             _asteroids.Create += View.CreateAsteroid;
             _asteroids.Remove += View.RemoveAsteroid;
             _bullets.player.Create += View.CreateBullet;
@@ -111,6 +115,8 @@ namespace App.Code.World
             View.UI.Restart -= OnRestart;
             _spaceship.Create -= CreateSpaceship;
             _spaceship.Remove -= RemoveSpaceship;
+            _enemies.Create -= View.CreateEnemy;
+            _enemies.Remove -= View.RemoveEnemy;
             _asteroids.Create -= View.CreateAsteroid;
             _asteroids.Remove -= View.RemoveAsteroid;
             _bullets.player.Create -= View.CreateBullet;

@@ -2,7 +2,6 @@
 using App.Code.Model.Custom.Bullets;
 using App.Code.Model.Custom.Enemies.State;
 using App.Code.Model.Entities;
-using App.Code.Model.Entities.Base;
 using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
@@ -10,10 +9,10 @@ using UnityEngine;
 
 namespace App.Code.Model.Custom.Enemies
 {
-    public class EnemyModel : ISource<Body>, IPointable
+    public class EnemyModel : ISource<Enemy>, IPointable
     {
-        public event Action<Body> Create;
-        public event Action<Body> Remove;
+        public event Action<Enemy> Create;
+        public event Action<Enemy> Remove;
 
         public event Action Point;
 
@@ -83,6 +82,8 @@ namespace App.Code.Model.Custom.Enemies
 
         public void Update(float deltaTime)
         {
+            _bullets.Update(deltaTime);
+            
             if (!_spaceship.IsAlive())
             {
                 return;

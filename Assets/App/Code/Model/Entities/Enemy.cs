@@ -16,7 +16,7 @@ namespace App.Code.Model.Entities
 
         public void ApplyMovementTowards(Vector2 position, float deltaTime, GameField field)
         {
-            // Movement = 
+            Movement = (position - Position).normalized * _speed;
             ApplyMovement(deltaTime, field);
         }
     }
