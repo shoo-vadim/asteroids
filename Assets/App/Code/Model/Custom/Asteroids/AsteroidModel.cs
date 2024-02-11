@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using App.Code.Model.Entities;
-using App.Code.Model.Entities.Base;
 using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Extensions;
 using App.Code.Model.Logical.Field;
@@ -10,14 +9,17 @@ using UnityEngine;
 
 namespace App.Code.Model.Custom.Asteroids
 {
-    public class AsteroidModel : ISource<Asteroid>
+    public class AsteroidModel : ISource<Asteroid>, IPointable
     {
         public event Action<Asteroid> Create;
         public event Action<Asteroid> Remove;
+
+        public event Action Point;
         
         private readonly GameField _field;
         private readonly AsteroidSettings _settings;
         private readonly AsteroidBuilder _builder;
+        private readonly SpaceshipModel _spaceship;
 
         private readonly List<Asteroid> _asteroids;
 
@@ -26,13 +28,15 @@ namespace App.Code.Model.Custom.Asteroids
         public AsteroidModel(GameField field,
             AsteroidSettings settings, 
             AsteroidBuilder builder, 
-            IEnumerable<Asteroid> asteroids)
+            IEnumerable<Asteroid> asteroids, 
+            SpaceshipModel spaceship)
         {
             _field = field;
             _settings = settings;
             _builder = builder;
             _asteroids = new List<Asteroid>(asteroids);
             _timerSpawn = settings.Spawn.GetRandom();
+            _spaceship = spaceship;
         }
         
         private void AddAndNotify(Asteroid asteroid)
@@ -61,8 +65,21 @@ namespace App.Code.Model.Custom.Asteroids
                 if (asteroid.HasIntersectionWithRay(ray))
                 {
                     Break(asteroid);
+                    Point?.Invoke();
                 }
-            }            
+            }
+        }
+
+        private void UpdateSpaceshipCollision()
+        {
+            for (var a = _asteroids.Count - 1; a >= 0; a--)
+            {
+                var asteroid = _asteroids[a];
+                if (_spaceship.ApplyBody(asteroid.Position, asteroid.Radius))
+                {
+                    Break(asteroid);
+                }
+            }
         }
 
         public bool ApplyBullet(Vector2 position)
@@ -73,19 +90,7 @@ namespace App.Code.Model.Custom.Asteroids
                 if (asteroid.HasIntersectionWithPoint(position))
                 {
                     Break(asteroid);
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        public bool HasAnyIntersection(Body body)
-        {
-            foreach (var t in _asteroids)
-            {
-                if (t.HasIntersectionWithBody(body))
-                {
+                    Point?.Invoke();
                     return true;
                 }
             }
@@ -116,6 +121,7 @@ namespace App.Code.Model.Custom.Asteroids
         {
             UpdateSpawn(deltaTime);
             UpdateMovement(deltaTime);
+            UpdateSpaceshipCollision();
         }
     }
 }

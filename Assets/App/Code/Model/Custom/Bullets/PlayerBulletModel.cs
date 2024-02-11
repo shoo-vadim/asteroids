@@ -10,13 +10,15 @@ namespace App.Code.Model.Custom.Bullets
     {
         private readonly BulletSettings _settings;
         private readonly AsteroidModel _asteroids;
+        private readonly EnemyModel _enemy;
         
         private float _timerReload;
         
-        public PlayerBulletModel(GameField field, BulletSettings settings, AsteroidModel asteroids) : base(field)
+        public PlayerBulletModel(GameField field, BulletSettings settings, AsteroidModel asteroids, EnemyModel enemy) : base(field)
         {
             _settings = settings;
             _asteroids = asteroids;
+            _enemy = enemy;
         }
         
         public bool TryApplyShot(Vector2 position, Vector2 direction)
@@ -33,7 +35,7 @@ namespace App.Code.Model.Custom.Bullets
 
         protected override bool ApplyBulletLifetime(Bullet bullet)
         {
-            return _asteroids.ApplyBullet(bullet.Position);
+            return _asteroids.ApplyBullet(bullet.Position) || _enemy.ApplyBullet(bullet.Position);
         }
 
         public override void Update(float deltaTime)

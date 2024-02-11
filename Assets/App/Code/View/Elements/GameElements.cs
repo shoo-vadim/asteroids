@@ -36,15 +36,13 @@ namespace App.Code.View.Elements
                 ?? throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
         }
 
-        public void BindUI(ISpaceship spaceship, ILaser laser)
+        public void BindUI(ILaser laser)
         {
-            _spaceshipUI.Bind(spaceship);
             _laserUI.Bind(laser);
         }
 
-        public void DropUI(ISpaceship spaceship, ILaser laser)
+        public void DropUI(ILaser laser)
         {
-            _spaceshipUI.Drop(spaceship);
             _laserUI.Drop(laser);
         }
 
@@ -56,11 +54,13 @@ namespace App.Code.View.Elements
 
         public void CreateSpaceship(ISpaceship spaceship)
         {
+            _spaceshipUI.Bind(spaceship);
             _spaceship = ObtainElement<SpaceshipView, ISpaceship>(ElementType.Spaceship, spaceship);
         }
 
         public void RemoveSpaceship(ISpaceship spaceship)
         {
+            _spaceshipUI.Drop(spaceship);
             ReleaseElement(_spaceship, spaceship);
         }
         

@@ -19,14 +19,14 @@ namespace App.Code.Model.Entities.Base
             return dot > 0 && (closest - Position).sqrMagnitude < Mathf.Pow(Radius, 2);
         }
 
-        public bool HasIntersectionWithPoint(Vector2 point)
+        public bool HasIntersectionWithPoint(Vector2 position)
         {
-            return (Position - point).sqrMagnitude < Mathf.Pow(Radius, 2);
+            return (Position - position).sqrMagnitude < Mathf.Pow(Radius, 2);
         }
 
-        public bool HasIntersectionWithBody(Body body)
+        public bool HasIntersectionWithBody(Vector2 position, float radius)
         {
-            return (Position - body.Position).sqrMagnitude < Mathf.Pow(Radius + body.Radius, 2);
+            return (Position - position).sqrMagnitude < Mathf.Pow(Radius + radius, 2);
         }
     }
 }
