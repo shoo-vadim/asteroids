@@ -2,6 +2,7 @@
 using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Custom.Bullets;
+using App.Code.Model.Custom.Enemies;
 using App.Code.Model.Interfaces;
 using App.Code.Settings;
 using UnityEngine;

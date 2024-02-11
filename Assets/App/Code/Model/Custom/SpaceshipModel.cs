@@ -43,6 +43,11 @@ namespace App.Code.Model.Custom
             return true;
         }
 
+        public bool IsAlive()
+        {
+            return _spaceship != null;
+        }
+
         public bool ApplyBody(Vector2 position, float radius)
         {
             if (_spaceship == null || !_spaceship.HasIntersectionWithBody(position, radius))
@@ -51,6 +56,18 @@ namespace App.Code.Model.Custom
             }
             
             DestroySpaceship();
+            return true;
+        }
+
+        public bool TryGetPosition(out Vector2 position)
+        {
+            if (_spaceship == null)
+            {
+                position = default;
+                return false;
+            }
+
+            position = _spaceship.Position;
             return true;
         }
 

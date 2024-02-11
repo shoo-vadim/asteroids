@@ -1,4 +1,5 @@
 ﻿using App.Code.Model.Custom.Asteroids;
+using App.Code.Model.Custom.Enemies;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
@@ -35,7 +36,7 @@ namespace App.Code.Model.Custom.Bullets
 
         protected override bool ApplyBulletLifetime(Bullet bullet)
         {
-            return _asteroids.ApplyBullet(bullet.Position) || _enemy.ApplyBullet(bullet.Position);
+            return _asteroids.ApplyBullet(bullet.Position) || _enemy.ApplyPlayerBullet(bullet.Position);
         }
 
         public override void Update(float deltaTime)

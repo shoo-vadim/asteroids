@@ -5,6 +5,7 @@ using App.Code.Model;
 using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Custom.Bullets;
+using App.Code.Model.Custom.Enemies;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
 using App.Code.Model.Interfaces.Base;
@@ -46,7 +47,7 @@ namespace App.Code.World
             var asteroidCollection = builder.BuildCollection(10).ToArray(); 
             var asteroids = new AsteroidModel(_field, _settings.Asteroid, builder, asteroidCollection, spaceshipModel);
             var bulletsEnemy = new EnemyBulletModel(_field, spaceshipModel);
-            var enemy = new EnemyModel(bulletsEnemy, spaceshipModel);
+            var enemy = new EnemyModel(_field, bulletsEnemy, spaceshipModel, _settings.Enemy);
             var bulletsPlayer = new PlayerBulletModel(_field, _settings.Spaceship.Bullet, asteroids, enemy);
 
             var space = new SpaceModel(_settings, spaceshipModel, laser, asteroids, bulletsPlayer, enemy);
@@ -95,7 +96,6 @@ namespace App.Code.World
         private void BindView()
         {
             View.UI.Restart += OnRestart;
-            
             _spaceship.Create += CreateSpaceship;
             _spaceship.Remove += RemoveSpaceship;
             _asteroids.Create += View.CreateAsteroid;
@@ -109,7 +109,6 @@ namespace App.Code.World
         private void DropView()
         {
             View.UI.Restart -= OnRestart;
-            
             _spaceship.Create -= CreateSpaceship;
             _spaceship.Remove -= RemoveSpaceship;
             _asteroids.Create -= View.CreateAsteroid;
