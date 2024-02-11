@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using App.Code.Model;
 using App.Code.Model.Custom;
@@ -65,20 +66,21 @@ namespace App.Code.World
             _asteroids = asteroids;
             _bullets = (bullets.player, bullets.enemy);
 
-            foreach (var asteroid in asteroidCollection)
-            {
-                View.CreateAsteroid(asteroid);
-            }
-            BindView();
+            BindView(asteroidCollection);
         }
 
         private void OnDestroy()
         {
             DropView();
-        } 
+        }
 
-        private void BindView()
+        private void BindView(IEnumerable<Asteroid> asteroidCollection)
         {
+            foreach (var asteroid in asteroidCollection)
+            {
+                View.CreateAsteroid(asteroid);
+            }
+            
             View.BindUI(_spaceship, _laser);
             View.CreateSpaceship(_spaceship);
             
