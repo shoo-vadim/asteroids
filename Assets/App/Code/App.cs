@@ -47,14 +47,14 @@ namespace App.Code
                 _prefabs.Remove(_menu);
             }
             _game = game;
-            _game.GameOver += OnGameOver;
+            _game.Restart += OnGameOver;
         }
 
         private void RunMenu(MenuWorld menu)
         {
             if (_game)
             {
-                _game.GameOver -= OnGameOver;
+                _game.Restart -= OnGameOver;
                 _prefabs.Remove(_game);
             }
             _menu = menu;

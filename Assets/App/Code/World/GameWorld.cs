@@ -20,13 +20,13 @@ namespace App.Code.World
     [RequireComponent(typeof(GameElements))]
     public class GameWorld : MonoWorld<GameElements>
     {
-        public event Action GameOver;
+        public event Action Restart;
 
         [SerializeField] private GameSettings _settings;
 
         private GameField _field;
 
-        private SpaceshipModel _spaceshipModel;
+        private SpaceshipModel _spaceship;
         private ILaser _laser;
         private ISpace _space;
         private ISource<Asteroid> _asteroids;
@@ -51,7 +51,7 @@ namespace App.Code.World
 
             var space = new SpaceModel(_settings, spaceshipModel, laser, asteroids, bulletsPlayer, enemy);
 
-            _spaceshipModel = spaceshipModel;
+            _spaceship = spaceshipModel;
             _laser = laser;
             _space = space;
             _asteroids = asteroids;
@@ -82,20 +82,22 @@ namespace App.Code.World
 
         private void BindLogic()
         {
-            _spaceshipModel.Dead += OnGameOver;
+            _spaceship.Dead += OnGameOver;
             foreach (var p in _pointables) p.Point += OnPoint;
         }
 
         private void DropLogic()
         {
-            _spaceshipModel.Dead -= OnGameOver;
+            _spaceship.Dead -= OnGameOver;
             foreach (var p in _pointables) p.Point -= OnPoint;
         }
 
         private void BindView()
         {
-            _spaceshipModel.Create += CreateSpaceship;
-            _spaceshipModel.Remove += RemoveSpaceship;
+            View.UI.Restart += OnRestart;
+            
+            _spaceship.Create += CreateSpaceship;
+            _spaceship.Remove += RemoveSpaceship;
             _asteroids.Create += View.CreateAsteroid;
             _asteroids.Remove += View.RemoveAsteroid;
             _bullets.player.Create += View.CreateBullet;
@@ -106,8 +108,10 @@ namespace App.Code.World
 
         private void DropView()
         {
-            _spaceshipModel.Create -= CreateSpaceship;
-            _spaceshipModel.Remove -= RemoveSpaceship;
+            View.UI.Restart -= OnRestart;
+            
+            _spaceship.Create -= CreateSpaceship;
+            _spaceship.Remove -= RemoveSpaceship;
             _asteroids.Create -= View.CreateAsteroid;
             _asteroids.Remove -= View.RemoveAsteroid;
             _bullets.player.Create -= View.CreateBullet;
@@ -132,22 +136,22 @@ namespace App.Code.World
         {
             if (Keyboard.current.dKey.isPressed)
             {
-                _spaceshipModel.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime); 
+                _spaceship.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime); 
             }
 
             if (Keyboard.current.aKey.isPressed)
             {
-                _spaceshipModel.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
+                _spaceship.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
             }
 
             if (Keyboard.current.wKey.isPressed)
             {
-                _spaceshipModel.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
+                _spaceship.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
             }
             
             if (Keyboard.current.sKey.isPressed)
             {
-                _spaceshipModel.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
+                _spaceship.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
             }
 
             if (Keyboard.current.ctrlKey.wasPressedThisFrame)
@@ -174,7 +178,9 @@ namespace App.Code.World
             _space.Update(Time.deltaTime);
         }
 
-        private void OnGameOver() => GameOver?.Invoke();
+        private void OnGameOver() => View.UI.ShowPoints(_points);
+
+        private void OnRestart() => Restart?.Invoke(); 
 
         private void OnPoint() => _points++;
     }

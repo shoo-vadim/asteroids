@@ -7,6 +7,7 @@ using App.Code.View.Binding;
 using App.Code.View.Binding.Custom;
 using App.Code.View.Pool;
 using App.Code.View.Tools;
+using App.Code.View.UI;
 using App.Code.View.UI.Dashboard;
 using UnityEngine;
 
@@ -16,8 +17,7 @@ namespace App.Code.View.Elements
     {
         [SerializeField] private LaserView _laserPrefab;
 
-        private LaserUI _laserUI;
-        private SpaceshipUI _spaceshipUI;
+        public GameUI UI { get; private set; }
         
         private readonly Dictionary<Bullet, PositionableView<Bullet>> _bullets = new();
         
@@ -26,24 +26,19 @@ namespace App.Code.View.Elements
         protected override void Awake()
         {
             base.Awake();
-
-            _spaceshipUI = 
-                GetComponentInChildren<SpaceshipUI>() 
-                ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
             
-            _laserUI = 
-                GetComponentInChildren<LaserUI>() 
-                ?? throw new InvalidOperationException($"Unable to find {typeof(LaserUI).FullName} component!");
+            UI = GetComponent<GameUI>() 
+                  ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
         }
 
         public void BindUI(ILaser laser)
         {
-            _laserUI.Bind(laser);
+            UI.Laser.Bind(laser);
         }
 
         public void DropUI(ILaser laser)
         {
-            _laserUI.Drop(laser);
+            UI.Laser.Drop(laser);
         }
 
         public void CreateLaser(Ray2D ray)
@@ -54,13 +49,13 @@ namespace App.Code.View.Elements
 
         public void CreateSpaceship(ISpaceship spaceship)
         {
-            _spaceshipUI.Bind(spaceship);
+            UI.Spaceship.Bind(spaceship);
             _spaceship = ObtainElement<SpaceshipView, ISpaceship>(ElementType.Spaceship, spaceship);
         }
 
         public void RemoveSpaceship(ISpaceship spaceship)
         {
-            _spaceshipUI.Drop(spaceship);
+            UI.Spaceship.Drop(spaceship);
             ReleaseElement(_spaceship, spaceship);
         }
         
