@@ -64,6 +64,5 @@ namespace App.Code
         private void OnGameStart() => RunGame(_prefabs.CreateGameWorld());
         
         private void OnGameOver() => RunMenu(_prefabs.CreateMenuWorld());
-        
     }
 }
