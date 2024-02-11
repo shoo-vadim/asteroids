@@ -1,15 +1,13 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
+    [Serializable]
     public class GameSettings
     {
-        public ShipSettings Spaceship { get; }
+        [field: SerializeField] public ShipSettings Spaceship { get; private set; }
 
-        public AsteroidSettings Asteroid { get; }
-
-        public GameSettings(ShipSettings spaceship, AsteroidSettings asteroid)
-        {
-            Spaceship = spaceship;
-            Asteroid = asteroid;
-        }
+        [field: SerializeField] public AsteroidSettings Asteroid { get; private set; }
     }
 }

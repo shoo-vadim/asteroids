@@ -1,10 +1,14 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
+    [Serializable]
     public class AsteroidSettings
     {
-        public Range<float> Speed { get; }
+        [field: SerializeField] public Range<float> Speed { get; private set; }
         
-        public Range<float> Spawn { get; }
+        [field: SerializeField] public Range<float> Spawn { get; private set; }
 
         public AsteroidSettings(Range<float> speed, Range<float> spawn)
         {

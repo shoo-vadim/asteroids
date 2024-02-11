@@ -1,9 +1,13 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
-    public struct Range<T>
+    [Serializable]
+    public class Range<T>
     {
-        public readonly T Min;
-        public readonly T Max;
+        [field: SerializeField] public T Min { get; private set; }
+        [field: SerializeField] public T Max { get; private set; }
 
         public Range(T min, T max)
         {

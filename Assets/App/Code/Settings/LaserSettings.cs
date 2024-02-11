@@ -1,15 +1,13 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
+    [Serializable]
     public class LaserSettings
     {
-        public int Amount { get; }
+        [field: SerializeField] public int Amount { get; private set; }
         
-        public float Reload { get; }
-
-        public LaserSettings(int amount, float reload)
-        {
-            Amount = amount;
-            Reload = reload;
-        }
+        [field: SerializeField] public float Reload { get; private set; }
     }
 }

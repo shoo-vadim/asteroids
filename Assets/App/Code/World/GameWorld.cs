@@ -21,17 +21,8 @@ namespace App.Code.World
     public class GameWorld : MonoWorld<GameElements>
     {
         public event Action GameOver;
-        
-        private readonly GameSettings _settings = new(
-            new ShipSettings(
-                180,
-                10,
-                new BulletSettings(2, 0.2f, 16),
-                new LaserSettings(20, 2f)),
-            new AsteroidSettings(
-                new Range<float>(1, 5), 
-                new Range<float>(5, 10))
-        );
+
+        [SerializeField] private GameSettings _settings;
 
         private GameField _field;
 

@@ -1,18 +1,15 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
+    [Serializable]
     public class BulletSettings
     {
-        public float Lifetime { get; }
+        [field: SerializeField] public float Lifetime { get; private set; }
         
-        public float Reload { get; }
+        [field: SerializeField] public float Reload { get; private set; }
         
-        public float Speed { get; }
-
-        public BulletSettings(float lifetime, float reload, float speed)
-        {
-            Lifetime = lifetime;
-            Reload = reload;
-            Speed = speed;
-        }
+        [field: SerializeField] public float Speed { get; private set; }
     }
 }

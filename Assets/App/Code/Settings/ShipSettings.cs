@@ -1,21 +1,17 @@
-﻿namespace App.Code.Settings
+﻿using System;
+using UnityEngine;
+
+namespace App.Code.Settings
 {
+    [Serializable]
     public class ShipSettings
     {
-        public float Rotation { get; }
+        [field: SerializeField] public float Rotation { get; private set; }
         
-        public float Thrust { get; }
+        [field: SerializeField] public float Thrust { get; private set; }
         
-        public BulletSettings Bullet { get; }
+        [field: SerializeField] public BulletSettings Bullet { get; private set; }
         
-        public LaserSettings Laser { get; }
-
-        public ShipSettings(float rotation, float thrust, BulletSettings bullet, LaserSettings laser)
-        {
-            Rotation = rotation;
-            Thrust = thrust;
-            Bullet = bullet;
-            Laser = laser;
-        }
+        [field: SerializeField]  public LaserSettings Laser { get; private set; }
     }
 }
