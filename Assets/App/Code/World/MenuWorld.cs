@@ -38,7 +38,7 @@ namespace App.Code.World
                 asteroid.ApplyMovement(Time.deltaTime, _field);
             }
             
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (Keyboard.current.enterKey.wasPressedThisFrame)
             {
                 GameStart?.Invoke();
             }
