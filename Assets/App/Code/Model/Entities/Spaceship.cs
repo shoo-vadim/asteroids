@@ -11,7 +11,7 @@ namespace App.Code.Model.Entities
         public event Action<Vector2> DirectionChange;
         public event Action<Vector2> MovementChange;
         public Vector2 Direction { get; private set; }
-        public Vector2 ShootingPoint => Position + Direction;
+        public Vector2 ShootingPoint => Position + Direction * 2;
         
         public Spaceship(Vector2 position, Vector2 direction, Vector2 movement, float radius) : 
             base(position, movement, radius)

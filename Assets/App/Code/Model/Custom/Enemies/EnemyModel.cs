@@ -34,16 +34,30 @@ namespace App.Code.Model.Custom.Enemies
 
         public bool ApplyPlayerBullet(Vector2 position)
         {
-            if (_state is EnemyRunning state && state.Enemy.HasIntersectionWithPoint(position))
+            if (_state is EnemyRunning running 
+                && running.Enemy.HasIntersectionWithPoint(position))
             {
-                var enemy = state.Enemy;
-                Remove?.Invoke(enemy);
-                Point?.Invoke();
-                _state = new EnemyWaiting(_settings.Spawn);
+                Kill(running);
                 return true;
             }
 
             return false;
+        }
+
+        public void ApplyLaser(Ray2D ray)
+        {
+            if (_state is EnemyRunning running && running.Enemy.HasIntersectionWithRay(ray))
+            {
+                Kill(running);
+            }
+        }
+
+        private void Kill(EnemyRunning state)
+        {
+            var enemy = state.Enemy;
+            Remove?.Invoke(enemy);
+            Point?.Invoke();
+            _state = new EnemyWaiting(_settings.Spawn);
         }
 
         private void UpdateWaiting(EnemyWaiting waiting, float deltaTime)

@@ -63,7 +63,10 @@ namespace App.Code.Model
                 ray = default;
                 return false;
             }
-            _asteroids.ApplyLaser(ray = new Ray2D(point, direction));
+
+            ray = new Ray2D(point, direction);
+            _enemy.ApplyLaser(ray);
+            _asteroids.ApplyLaser(ray);
             _laser.ApplyShot();
             return true;
         }
