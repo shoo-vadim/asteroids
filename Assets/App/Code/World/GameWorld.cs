@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using App.Code.Model;
-using App.Code.Model.Custom;
-using App.Code.Model.Custom.Asteroids;
-using App.Code.Model.Custom.Bullets;
-using App.Code.Model.Custom.Enemies;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
+using App.Code.Model.Logic;
+using App.Code.Model.Logic.Asteroids;
+using App.Code.Model.Logic.Bullets;
+using App.Code.Model.Logic.Enemies;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using App.Code.Settings.Scriptables;

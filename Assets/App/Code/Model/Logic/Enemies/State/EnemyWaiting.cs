@@ -1,7 +1,7 @@
 ﻿using App.Code.Settings;
 using UnityEngine;
 
-namespace App.Code.Model.Custom.Enemies.State
+namespace App.Code.Model.Logic.Enemies.State
 {
     public sealed class EnemyWaiting : EnemyState
     {

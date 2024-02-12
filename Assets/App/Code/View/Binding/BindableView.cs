@@ -1,7 +1,7 @@
 ﻿using App.Code.Model.Interfaces.Base;
 using UnityEngine;
 
-namespace App.Code.View.Custom
+namespace App.Code.View.Binding
 {
     public abstract class BindableView<TModel> : MonoBehaviour where TModel : IPositionable
     {

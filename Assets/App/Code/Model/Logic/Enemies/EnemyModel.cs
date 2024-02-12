@@ -1,13 +1,13 @@
 ﻿using System;
-using App.Code.Model.Custom.Bullets;
-using App.Code.Model.Custom.Enemies.State;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces.Base;
+using App.Code.Model.Logic.Bullets;
+using App.Code.Model.Logic.Enemies.State;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using UnityEngine;
 
-namespace App.Code.Model.Custom.Enemies
+namespace App.Code.Model.Logic.Enemies
 {
     public class EnemyModel : ISource<Enemy>, IPointable
     {

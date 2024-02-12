@@ -1,4 +1,4 @@
-﻿namespace App.Code.Model.Custom.Enemies.State
+﻿namespace App.Code.Model.Logic.Enemies.State
 {
     public abstract class EnemyState
     {

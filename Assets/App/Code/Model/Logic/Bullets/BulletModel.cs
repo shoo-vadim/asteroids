@@ -4,7 +4,7 @@ using App.Code.Model.Entities;
 using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 
-namespace App.Code.Model.Custom.Bullets
+namespace App.Code.Model.Logic.Bullets
 {
     public abstract class BulletModel : ISource<Bullet>
     {

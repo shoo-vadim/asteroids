@@ -1,6 +1,6 @@
 ﻿using App.Code.Model.Entities;
 
-namespace App.Code.Model.Custom.Enemies.State
+namespace App.Code.Model.Logic.Enemies.State
 {
     public sealed class EnemyRunning : EnemyState
     {

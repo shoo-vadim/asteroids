@@ -1,7 +1,7 @@
 ﻿using App.Code.Model.Entities;
 using App.Code.Model.Logical.Field;
 
-namespace App.Code.Model.Custom.Bullets
+namespace App.Code.Model.Logic.Bullets
 {
     public class EnemyBulletModel : BulletModel
     {

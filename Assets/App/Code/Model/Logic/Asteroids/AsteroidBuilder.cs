@@ -6,7 +6,7 @@ using App.Code.Settings;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace App.Code.Model.Custom.Asteroids
+namespace App.Code.Model.Logic.Asteroids
 {
     public class AsteroidBuilder
     {

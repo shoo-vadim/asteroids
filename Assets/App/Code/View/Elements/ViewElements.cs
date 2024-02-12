@@ -1,6 +1,6 @@
 ﻿using System;
 using App.Code.Model.Interfaces.Base;
-using App.Code.View.Custom;
+using App.Code.View.Binding;
 using App.Code.View.Pool;
 using UnityEngine;
 

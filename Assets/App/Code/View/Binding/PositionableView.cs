@@ -1,5 +1,4 @@
 ﻿using App.Code.Model.Interfaces.Base;
-using App.Code.View.Custom;
 using UnityEngine;
 
 namespace App.Code.View.Binding

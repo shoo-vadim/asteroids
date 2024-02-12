@@ -1,8 +1,8 @@
 ﻿using System;
-using App.Code.Model.Custom;
-using App.Code.Model.Custom.Asteroids;
-using App.Code.Model.Custom.Bullets;
-using App.Code.Model.Custom.Enemies;
+using App.Code.Model.Logic;
+using App.Code.Model.Logic.Asteroids;
+using App.Code.Model.Logic.Bullets;
+using App.Code.Model.Logic.Enemies;
 using App.Code.Settings;
 using UnityEngine;
 

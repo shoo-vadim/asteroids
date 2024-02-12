@@ -4,7 +4,7 @@ using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using UnityEngine;
 
-namespace App.Code.Model.Custom
+namespace App.Code.Model.Logic
 {
     public class SpaceshipModel : ISource<Spaceship>
     {

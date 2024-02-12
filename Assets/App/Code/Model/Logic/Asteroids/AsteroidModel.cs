@@ -7,7 +7,7 @@ using App.Code.Model.Logical.Field;
 using App.Code.Settings;
 using UnityEngine;
 
-namespace App.Code.Model.Custom.Asteroids
+namespace App.Code.Model.Logic.Asteroids
 {
     public class AsteroidModel : ISource<Asteroid>, IPointable
     {

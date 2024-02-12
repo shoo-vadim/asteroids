@@ -2,7 +2,7 @@
 using App.Code.Model.Interfaces;
 using App.Code.Settings;
 
-namespace App.Code.Model.Custom
+namespace App.Code.Model.Logic
 {
     public class LaserModel : ILaser
     {
