@@ -29,8 +29,9 @@ namespace App.Code.World
 
         private SpaceModel _space;
         private SpaceshipModel _spaceship;
-        private ILaser _laser;
         private ViewSources _sources;
+        
+        private ILaser _laser;
 
         private void Start()
         {
@@ -76,7 +77,7 @@ namespace App.Code.World
 
         private void BuildView(IEnumerable<Asteroid> asteroidCollection, ISpaceship spaceship)
         {
-            View.CreateSpaceship(spaceship);
+            View.CreateSpaceship(spaceship, _laser);
             foreach (var asteroid in asteroidCollection) View.CreateAsteroid(asteroid);
             
             BindView();
@@ -112,14 +113,12 @@ namespace App.Code.World
 
         private void CreateSpaceship(ISpaceship spaceship)
         {
-            View.CreateSpaceship(spaceship);
-            View.BindUI(_laser);
+            View.CreateSpaceship(spaceship, _laser);
         }
         
         private void RemoveSpaceship(ISpaceship spaceship)
         {
-            View.RemoveSpaceship(spaceship);
-            View.DropUI(_laser);
+            View.RemoveSpaceship(spaceship, _laser);
         }
 
         private void HandleInput()

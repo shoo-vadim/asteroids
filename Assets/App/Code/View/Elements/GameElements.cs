@@ -31,31 +31,23 @@ namespace App.Code.View.Elements
             UI = GetComponent<GameUI>() 
                   ?? throw new InvalidOperationException($"Unable to find {typeof(SpaceshipUI).FullName} component!");
         }
-
-        public void BindUI(ILaser laser)
-        {
-            UI.Laser.Bind(laser);
-        }
-
-        public void DropUI(ILaser laser)
-        {
-            UI.Laser.Drop(laser);
-        }
-
+        
         public void CreateLaser(Ray2D ray)
         {
             var laser = Instantiate(_laserPrefab);
             laser.Setup(ray);
         }
 
-        public void CreateSpaceship(ISpaceship spaceship)
+        public void CreateSpaceship(ISpaceship spaceship, ILaser laser)
         {
+            UI.Laser.Bind(laser);
             UI.Spaceship.Bind(spaceship);
             _spaceship = ObtainElement<SpaceshipView, ISpaceship>(ElementType.Spaceship, spaceship);
         }
 
-        public void RemoveSpaceship(ISpaceship spaceship)
+        public void RemoveSpaceship(ISpaceship spaceship, ILaser laser)
         {
+            UI.Laser.Drop(laser);
             UI.Spaceship.Drop(spaceship);
             ReleaseElement(_spaceship, spaceship);
         }

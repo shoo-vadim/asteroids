@@ -12,6 +12,10 @@ namespace App.Code.View.UI.Dashboard
         
         public void Bind(ISpaceship bind)
         {
+            OnPositionChange(bind.Position);
+            OnDirectionChange(bind.Direction);
+            OnMovementChange(bind.Movement);
+            
             bind.PositionChange += OnPositionChange;
             bind.DirectionChange += OnDirectionChange;
             bind.MovementChange += OnMovementChange;
