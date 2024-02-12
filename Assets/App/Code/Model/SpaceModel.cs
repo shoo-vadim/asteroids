@@ -3,15 +3,16 @@ using App.Code.Model.Custom;
 using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Custom.Bullets;
 using App.Code.Model.Custom.Enemies;
-using App.Code.Model.Interfaces;
 using App.Code.Settings;
 using UnityEngine;
 
 namespace App.Code.Model
 {
-    public class SpaceModel : ISpace
+    public class SpaceModel
     {
         public event Action GameOver;
+        
+        public int Points { get; private set; }
         
         private readonly GameSettings _settings;
         
@@ -35,6 +36,18 @@ namespace App.Code.Model
             _laser = laser;
             _asteroids = asteroids;
             _bullets = bullets;
+        }
+
+        public void Bind()
+        {
+            _enemy.Point += OnPoint;
+            _asteroids.Point += OnPoint;
+        }
+
+        public void Drop()
+        {
+            _enemy.Point -= OnPoint;
+            _asteroids.Point -= OnPoint;
         }
         
         public bool TryApplyBulletShot()
@@ -63,5 +76,7 @@ namespace App.Code.Model
             _laser.Update(deltaTime);
             _enemy.Update(deltaTime);
         }
+
+        private void OnPoint() => Points++;
     }
 }

@@ -4,7 +4,9 @@ using App.Code.Model.Custom.Asteroids;
 using App.Code.Model.Entities;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
+using App.Code.Settings.Scriptables;
 using App.Code.View.Elements;
+using App.Code.View.UI;
 using App.Code.World.Tools;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -14,6 +16,8 @@ namespace App.Code.World
     public class MenuWorld : MonoWorld<AsteroidElements>
     {
         public event Action GameStart;
+        
+        [SerializeField] private GameInputPreset _input;
 
         private GameField _field;
         private Asteroid[] _asteroids;
@@ -29,6 +33,13 @@ namespace App.Code.World
             {
                 View.CreateAsteroid(asteroid);
             }
+
+            if (GetComponentInChildren<HintUI>() is not { } hint)
+            {
+                throw new InvalidOperationException($"Unable to find {typeof(HintUI).FullName} component");
+            }
+            
+            hint.Refresh(_input.Bullet.GetBindingDisplayString(), _input.Laser.GetBindingDisplayString());
         }
 
         private void Update()

@@ -8,13 +8,12 @@ using App.Code.Model.Custom.Bullets;
 using App.Code.Model.Custom.Enemies;
 using App.Code.Model.Entities;
 using App.Code.Model.Interfaces;
-using App.Code.Model.Interfaces.Base;
 using App.Code.Model.Logical.Field;
 using App.Code.Settings;
+using App.Code.Settings.Scriptables;
 using App.Code.View.Elements;
 using App.Code.World.Tools;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace App.Code.World
 {
@@ -22,20 +21,16 @@ namespace App.Code.World
     public class GameWorld : MonoWorld<GameElements>
     {
         public event Action Restart;
-
+        
         [SerializeField] private GameSettings _settings;
+        [SerializeField] private GameInputPreset _input;
 
         private GameField _field;
 
+        private SpaceModel _space;
         private SpaceshipModel _spaceship;
         private ILaser _laser;
-        private ISpace _space;
-        private ISource<Asteroid> _asteroids;
-        private ISource<Enemy> _enemies;
-        private (ISource<Bullet> player, ISource<Bullet> enemy) _bullets;
-        private IPointable[] _pointables;
-
-        private int _points;
+        private ViewSources _sources;
 
         private void Start()
         {
@@ -54,15 +49,23 @@ namespace App.Code.World
             var space = new SpaceModel(_settings, spaceshipModel, laser, asteroids, bulletsPlayer, enemies);
 
             _spaceship = spaceshipModel;
-            _enemies = enemies;
             _laser = laser;
             _space = space;
-            _asteroids = asteroids;
-            _bullets = (bulletsPlayer, bulletsEnemy);
-            _pointables = new IPointable[] { asteroids, enemies };
+
+            _sources = new ViewSources(asteroids, enemies, bulletsPlayer, bulletsEnemy);
 
             BindLogic();
             BuildView(asteroidCollection, spaceship);
+        }
+
+        private void OnEnable()
+        {
+            _input.Enable();
+        }
+
+        private void OnDisable()
+        {
+            _input.Disable();
         }
 
         private void OnDestroy()
@@ -74,25 +77,21 @@ namespace App.Code.World
         private void BuildView(IEnumerable<Asteroid> asteroidCollection, ISpaceship spaceship)
         {
             View.CreateSpaceship(spaceship);
+            foreach (var asteroid in asteroidCollection) View.CreateAsteroid(asteroid);
             
-            foreach (var asteroid in asteroidCollection)
-            {
-                View.CreateAsteroid(asteroid);
-            }
-
             BindView();
         }
 
         private void BindLogic()
         {
             _spaceship.Dead += OnGameOver;
-            foreach (var p in _pointables) p.Point += OnPoint;
+            _space.Bind();
         }
 
         private void DropLogic()
         {
             _spaceship.Dead -= OnGameOver;
-            foreach (var p in _pointables) p.Point -= OnPoint;
+            _space.Drop();
         }
 
         private void BindView()
@@ -100,14 +99,7 @@ namespace App.Code.World
             View.UI.Restart += OnRestart;
             _spaceship.Create += CreateSpaceship;
             _spaceship.Remove += RemoveSpaceship;
-            _enemies.Create += View.CreateEnemy;
-            _enemies.Remove += View.RemoveEnemy;
-            _asteroids.Create += View.CreateAsteroid;
-            _asteroids.Remove += View.RemoveAsteroid;
-            _bullets.player.Create += View.CreateBullet;
-            _bullets.player.Remove += View.RemoveBullet;
-            _bullets.enemy.Create += View.CreateBullet;
-            _bullets.enemy.Remove += View.RemoveBullet;
+            _sources.Bind(View);
         }
 
         private void DropView()
@@ -115,14 +107,7 @@ namespace App.Code.World
             View.UI.Restart -= OnRestart;
             _spaceship.Create -= CreateSpaceship;
             _spaceship.Remove -= RemoveSpaceship;
-            _enemies.Create -= View.CreateEnemy;
-            _enemies.Remove -= View.RemoveEnemy;
-            _asteroids.Create -= View.CreateAsteroid;
-            _asteroids.Remove -= View.RemoveAsteroid;
-            _bullets.player.Create -= View.CreateBullet;
-            _bullets.player.Remove -= View.RemoveBullet;
-            _bullets.enemy.Create -= View.CreateBullet;
-            _bullets.enemy.Remove -= View.RemoveBullet;
+            _sources.Drop(View);
         }
 
         private void CreateSpaceship(ISpaceship spaceship)
@@ -139,35 +124,21 @@ namespace App.Code.World
 
         private void HandleInput()
         {
-            if (Keyboard.current.dKey.isPressed)
-            {
-                _spaceship.ApplyRotation(+_settings.Spaceship.Rotation * Time.deltaTime); 
-            }
+            _spaceship.ApplyRotation(
+                _input.Rotate.ReadValue<float>() * _settings.Spaceship.Rotation * Time.deltaTime);
 
-            if (Keyboard.current.aKey.isPressed)
-            {
-                _spaceship.ApplyRotation(-_settings.Spaceship.Rotation * Time.deltaTime);
-            }
+            _spaceship.ApplyThrust(
+                _input.Thrust.ReadValue<float>() * _settings.Spaceship.Thrust * Time.deltaTime);
 
-            if (Keyboard.current.wKey.isPressed)
-            {
-                _spaceship.ApplyThrust(+_settings.Spaceship.Thrust * Time.deltaTime);
-            }
-            
-            if (Keyboard.current.sKey.isPressed)
-            {
-                _spaceship.ApplyThrust(-_settings.Spaceship.Thrust * Time.deltaTime);
-            }
-
-            if (Keyboard.current.ctrlKey.wasPressedThisFrame)
+            if (_input.Laser.WasPressedThisFrame())
             {
                 if (_space.TryApplyLaserShot(out var ray))
                 {
                     View.CreateLaser(ray);
-                }
+                }                
             }
 
-            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            if (_input.Bullet.WasPressedThisFrame())
             {
                 if (!_space.TryApplyBulletShot())
                 {
@@ -183,10 +154,8 @@ namespace App.Code.World
             _space.Update(Time.deltaTime);
         }
 
-        private void OnGameOver() => View.UI.ShowPoints(_points);
+        private void OnGameOver() => View.UI.ShowPoints(_space.Points);
 
-        private void OnRestart() => Restart?.Invoke(); 
-
-        private void OnPoint() => _points++;
+        private void OnRestart() => Restart?.Invoke();
     }
 }

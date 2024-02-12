@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using App.Code.Settings.Scriptables;
 using UnityEngine;
 
 namespace App.Code.View.Pool
